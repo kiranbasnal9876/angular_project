@@ -1,0 +1,20 @@
+@if(formname()?.get(fieldname())?.touched){
+
+    @if(formname()?.get(fieldname())?.hasError('required')){
+        <small class="text-danger">{{label()}} is required</small>
+    }
+
+    @else if (formname()?.get(fieldname())?.hasError('maxlength')) {
+        <small class="text-danger"> {{label()}}  maximum {{maxlength()}} charecter allowed </small> 
+    }
+    @else if (formname()?.get(fieldname())?.hasError('minlength')) {
+        <small class="text-danger"> {{label()}}  at least {{minlength()}} charecter allowed </small> 
+    }
+    @else if (formname()?.get(fieldname())?.hasError('pattern')) {
+        <small class="text-danger"> {{label()}} should have  one special char one digit </small> 
+    }
+    @else if (formname()?.get(fieldname())?.hasError('email')) {
+        <small class="text-danger"> Email is invalid </small> 
+    }
+
+}

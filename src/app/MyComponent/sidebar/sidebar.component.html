@@ -1,0 +1,47 @@
+
+
+<div class="content-container col-12">
+  <div class="col-2 sidebar-container shadow-sm p-3 mb-5 bg-white rounded">
+    <nav class="navbar navbar-expand-lg navbar-light bg-light sidebar">
+  
+     
+        <div class="" id="navbarTogglerDemo03">
+     
+          <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+            <li class="nav-item">
+              <a class="nav-link active" aria-current="page" routerLink="/dashboard" routerLinkActive="active"><span><i class="bi bi-grid"></i></span> Dashboard</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" routerLink="usermaster" routerLinkActive="active"><span><i class="bi bi-person-circle"></i></span> User Master</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" routerLink="clientmaster" routerLinkActive="active"><span><i class="bi bi-people-fill"></i></span> Client Master</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" routerLink="itemmaster" routerLinkActive="active"><span><i class="bi bi-people-fill"></i></span> Item Master</a>
+            </li>
+            
+            <li class="nav-item">
+              <a class="nav-link" routerLink="invoicemaster" routerLinkActive="active"><span><i class="bi bi-calendar4"></i></span> Invoice Master</a>
+            </li>
+            
+          
+            
+            <div class="log-out">
+              <a class="nav-link" routerLink="/log-in"><span><i class="bi bi-box-arrow-in-right"></i></span> Log out</a>
+            </div>
+          </ul>
+  
+      </div>
+          
+   
+   
+    </nav>
+  </div>
+  <div class="col-10">
+   
+    <router-outlet></router-outlet>
+  </div>
+</div>
+
+

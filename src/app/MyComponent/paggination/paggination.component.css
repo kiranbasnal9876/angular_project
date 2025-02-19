@@ -1,0 +1,15 @@
+
+.paggination{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    .page{
+        /* margin-bottom: 20px; */
+        /* border: 2px solid violet; */
+    }
+
+    button{
+        border-radius: 0px;
+    }
+}

@@ -1,0 +1,60 @@
+.sidebar{
+   width: 100%;
+   /* border-top: 5px solid #482669 ; */
+   text-align: center;
+   font-weight: 500;
+   
+
+    ul{
+        display: flex;
+        flex-direction: column;
+       
+        li{
+            margin-bottom: 20px;
+            width: 100%;
+            border-radius: 5px;
+           a{
+            color: #482669;
+           }
+        }
+       
+    }
+
+    li:hover{
+        background-color: #482669;
+      
+        
+        a:hover{
+            color:white
+        }
+    }
+    .log-out{
+        margin-top: 200px;
+        background-color: #250644;
+        text-align: center;
+        border-radius: 5px;
+        a{
+            color: white;
+        }
+    }
+    #navbarTogglerDemo03{
+       width: 100%;
+     
+    }
+}
+
+.content-container{
+    display: flex;
+}
+
+.content-container{
+    height: calc( 100vh - 57px);
+    
+}
+
+
+.sidebar-container{
+height: calc( 100vh - 57px);
+
+
+}

@@ -1,0 +1,34 @@
+<div class=" log-div">
+
+    
+
+
+<!-- <h2>Login Form</h2> -->
+
+<form  [formGroup]="formdata">
+  <div class="imgcontainer">
+    <img src="../../../assets/log-img.jpg" alt="Avatar" class="avatar">
+  </div>
+
+  <div class="container">
+    <label for="uname"><b>User Email</b></label>
+    <input type="text" placeholder="Enter Username" formControlName="email"  >
+
+    <label for="psw"><b>Password</b></label>
+    <input type="password" placeholder="Enter Password" formControlName="password" >
+        
+    <button type="button"  (click)="check()">Login</button>
+    
+    
+    <div *ngIf="showelement" class="alert alert-danger" role="alert">
+        Plz Fill all the Field For Login
+       </div>
+  </div>
+
+  
+</form>
+
+
+
+</div>
+

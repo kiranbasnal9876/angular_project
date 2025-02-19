@@ -1,0 +1,94 @@
+
+
+<ul class="nav nav-tabs" id="myTab" role="tablist">
+    <li class="nav-item" role="presentation">
+      <button class="nav-link active" id="home-tab" data-bs-toggle="tab" data-bs-target="#home" type="button" role="tab" aria-controls="home" aria-selected="true">Home</button>
+    </li>
+    <li class="nav-item" role="presentation">
+      <button class="nav-link" id="profile-tab" data-bs-toggle="tab" data-bs-target="#profile" type="button" role="tab" aria-controls="profile" aria-selected="false">Profile</button>
+    </li>
+  
+  </ul>
+  <div class="tab-content" id="myTabContent ">
+    <div class="tab-pane fade show active " id="home" role="tabpanel" aria-labelledby="home-tab">
+      <div class=" d-grid gap-5">
+         <div class="col-12 row ">
+          <form [formGroup]="formdata" class="row">
+        <div class="col-md-3">
+            <label for="validationCustom01" class="form-label">Name</label>
+            <input type="text" class="form-control form-control-sm" id="validationCustom01" formControlName="name">
+          </div>
+    
+        <div class="col-md-3">
+            <label for="validationCustom01" class="form-label">phone</label>
+            <input type="text" class="form-control form-control-sm" id="validationCustom01"  formControlName="phone">
+          </div>
+    
+        <div class="col-md-4">
+            <label for="validationCustom01" class="form-label">Email</label>
+            <input type="text" class="form-control form-control-sm" id="validationCustom01" formControlName="email">
+          </div>
+      
+          <input type="hidden" formControlName="colname">
+          <input type="hidden" formControlName="order">
+          <input type="hidden" formControlName="page_no">
+          <input type="hidden" formControlName="row_no">
+          
+          <div class="col-md-1">
+            
+              <button class="btn  button btn-sm" (click)="search()">Search</button>
+             
+          </div>
+          <div class="col-md-1">
+            
+            <button class="btn  button btn-sm" (click)="reset()">Reset</button>
+             
+          </div>
+
+        </form>
+    </div>
+ 
+    <div class="col-12 " >
+    <app-paggination  [formdata]="formdata"></app-paggination>
+       
+    </div>
+         </div>
+        </div>
+  <div class="tab-pane fade" id="profile" role="tabpanel" aria-labelledby="profile-tab">
+        
+    <div class="col-12 ">
+        <form  class="row" [formGroup]="userdata">
+            <div class="col-md-3">
+                <label for="validationCustom01" class="form-label">Name*</label>
+                <input type="text" class="form-control form-control-sm" id="validationCustom01" formControlName="name">
+                <app-validation [formname]="userdata" fieldname="name" label=" Name"  ></app-validation>
+              </div>
+        
+            <div class="col-md-3">
+                <label for="validationCustom01" class="form-label">phone*</label>
+                <input type="text" class="form-control form-control-sm" id="validationCustom01" formControlName="phone" >
+                <app-validation [formname]="userdata" fieldname="phone" label="Phone" [minlength]=10 ></app-validation>
+              </div>
+        
+            <div class="col-md-3">
+                <label for="validationCustom01" class="form-label">Email*</label>
+                <input type="text" class="form-control form-control-sm" id="validationCustom01" formControlName="email">
+                <app-validation [formname]="userdata" fieldname="email" label="Email"  ></app-validation>
+              </div>
+        
+            <div class="col-md-3">
+                <label for="validationCustom01" class="form-label">Password*</label>
+                <input type="text" class="form-control form-control-sm" id="validationCustom01" formControlName="password">
+                <app-validation [formname]="userdata" fieldname="password" label="Password" [minlength]=8></app-validation>
+              </div>
+            <!-- </div> -->
+            <input type="hidden" formControlName="table_name">
+            <input type="hidden" formControlName="action">
+            <div class="col-md-3">
+            
+                <button class="btn btn-sm button " (click)="submit()">Submit</button>
+            </div>
+        </form>
+        </div>
+    
+  </div>

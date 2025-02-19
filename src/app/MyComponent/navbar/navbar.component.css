@@ -1,0 +1,15 @@
+
+.logo-img{
+    width: 200px;
+}
+.profile-img{
+    width: 40px;
+    /* padding: 0px; */
+    height: 40px;
+    border-radius: 50%;
+}
+.navbar{
+    height: 50px;
+    align-items: center;
+}
+
