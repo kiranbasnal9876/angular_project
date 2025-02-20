@@ -13,43 +13,8 @@
       <button type="button" class="btn " (click)="left()">Prev</button>
 
     
-  <button type='button' class='btn'>{{page_no}}</button>
+  <button type='button' class='btn'>{{user_all_fun.page_no}}</button>
       
     <button type="button" class="btn" (click)="right()">Next</button>
     </div>
   </div>
-
-  <table class="table  table-hover">
-    <thead >
-        <tr>
-
-            <th>S No.</th>
-            <th>Id </th>
-            <th>Name</th>
-            <th>Email</th>
-            <th>Phone</th>
-            <th>Update</th>
-            <th>delete</th>
-        </tr>
-    </thead>
-    <tbody>
-      @for (item of records; track item.id){
-        <tr>
-         
-        <td></td>
-        <td>{{ item.id }}</td>
-        <td>{{ item.name }}</td>
-        <td>{{ item.email }}</td>
-        <td>{{ item.phone }}</td>
-        <td><button class='btn  btn-sm'><i class='bi bi-pencil m-3' ></i></button></td>
-        <td><button class='btn  btn-sm'><i class='bi bi-trash3 m-3'></i></button></td>
-      </tr>
-        }
-         @empty {
-          <tr>
-        <td colspan="6">There are no items</td>
-      </tr>
-        }
-      
-    </tbody>
-      </table>

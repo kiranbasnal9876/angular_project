@@ -1,16 +1,10 @@
-import { Component, inject, Injectable, input, OnInit } from '@angular/core';
+import { Component, inject, Injectable,  input, OnInit } from '@angular/core';
 import { FormGroup } from '@angular/forms';
 
-import { ApiService } from '../../api.service';
+// import { ApiService } from '../../api.service';
+import { UsermasterComponent } from '../usermaster/usermaster.component';
+// import { ItemmasterComponent } from '../itemmaster/itemmaster.component';
 
-export  interface dataformate{
-
-  table:[],
-  total_records:number,
-  page_no:number
-  
-  }
-  
 
 @Component({
   selector: 'app-paggination',
@@ -19,65 +13,53 @@ export  interface dataformate{
   styleUrl: './paggination.component.css'
 })
 
-@Injectable({
-  providedIn:'root'
-})
-export class PagginationComponent implements OnInit,dataformate  {
 
-    table: [] = [];
-    total_records: number = 0;
-    page_no: number = 1;
-  
-    ngOnInit(): void{
-      this.getdata();
-    }
-  
-  
-  constructor(private user:ApiService ){
+export class PagginationComponent {
+
+user_all_fun = inject(UsermasterComponent);
+// item_all_fun = inject(ItemmasterComponent);
+
+// @Input() tablename : any;
+  constructor(){
 
         }
-    records: any[] = [];
+    
 
   formdata = input<FormGroup>() ;
+
+
   
   
-
-  getdata(){
-
-    // console.log(this.formdata()?.value);
-    this.user.postApicall("/paggination/test",this.formdata()?.value).subscribe((response: any) =>{
-      console.log(response);
-     this.records = response.table;
-     this.page_no=response.page_no;
-     this.total_records=response.total_records;
-   }
-   )
-   
-   }
-
-   
-
   getRows(row:any){
-  this.formdata()?.controls['row_no'].setValue(row);
-this.getdata();
+    this.formdata()?.controls['row_no'].setValue(row);
+    this.formdata()?.controls['page_no'].setValue(1);
+  
+    this.user_all_fun.getdata()
+
+    
+//  this.item_all_fun.getdata();
+    console.log("itemmaster");
+      
    
   }
 
 
   left(){
-   if(this.page_no > 1){
-     this.formdata()?.controls['page_no'].setValue(this.page_no-1);
-     this.getdata();
-     console.log("left");
+   if(this.user_all_fun.page_no > 1){
+     this.formdata()?.controls['page_no'].setValue(this.user_all_fun.page_no-1);
+     this.user_all_fun.getdata();
+    //  this.item_all_fun.getdata();
+     
    }
   }
 
   right(){
 
-    if(this.total_records > this.page_no){
-      this.formdata()?.controls['page_no'].setValue(this.page_no+1);
-      this.getdata();
-      console.log("right");
+    if(this.user_all_fun.total_records > this.user_all_fun.page_no){
+      this.formdata()?.controls['page_no'].setValue(this.user_all_fun.page_no+1);
+      this.user_all_fun.getdata();
+      
+      
 
     }
 

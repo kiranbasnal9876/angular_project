@@ -4,11 +4,35 @@ body{
 }
 
 .btn{
-    background-color: #482669;
-    color: white;
+    background-color: #482669 !important;
+    color: white !important;
+
     /* margin-top: 30px; */
 }
 
 .btn:hover{
     color: white;
+}
+
+
+.tab-content{
+    padding: 50px;
+}
+
+thead{
+    background-color: #bcb4c4; 
+    /* color: white; */
+}
+.button{
+    margin-top: 33px;
+}
+
+.table-btn{
+
+    /* width: 30px; */
+    padding: 50px;
+    /* text-align: center; */
+
+    background-color: white !important;
+    
 }

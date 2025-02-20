@@ -1,11 +1,23 @@
-.tab-content{
+/* .tab-content{
     padding: 50px;
+} */
+
+/* thead{
+    background-color: #bcb4c4;  */
+    /* color: white; */
+/* } */
+/* .button{
+    margin-top: 33px;
+} */
+
+/* #update{
+    display: none;
 }
 
-thead{
-    background-color: #bcb4c4; 
-    /* color: white; */
+.showelement{
+    display: block;
 }
-.button{
-    margin-top: 33px;
-}
+
+.hideelement{
+    display: none;
+} */

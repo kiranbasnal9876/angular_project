@@ -2,15 +2,17 @@
 
 <ul class="nav nav-tabs" id="myTab" role="tablist">
     <li class="nav-item" role="presentation">
-      <button class="nav-link active" id="home-tab" data-bs-toggle="tab" data-bs-target="#home" type="button" role="tab" aria-controls="home" aria-selected="true">Home</button>
+      <button class="nav-link active" id="home-tab" [ngClass]="{ 'active':activeTab==='search'}" (click)="searchtab('search')" data-bs-toggle="tab" data-bs-target="#home" type="button" role="tab" aria-controls="home" aria-selected="true">Home</button>
     </li>
     <li class="nav-item" role="presentation">
-      <button class="nav-link" id="profile-tab" data-bs-toggle="tab" data-bs-target="#profile" type="button" role="tab" aria-controls="profile" aria-selected="false">Profile</button>
+      <button class="nav-link" id="profile-tab" data-bs-toggle="tab"  [ngClass]="{ 'active':activeTab==='result'}" 
+      (click)="result('result')" data-bs-target="#profile" type="button" role="tab" aria-controls="profile" aria-selected="false">Profile</button>
     </li>
   
   </ul>
   <div class="tab-content" id="myTabContent ">
-    <div class="tab-pane fade show active " id="home" role="tabpanel" aria-labelledby="home-tab">
+    <!-- <div class="tab-pane fade show active " id="search" [ngClass]="{ 'active':activeTab==='search'}"  role="tabpanel" aria-labelledby="home-tab"> -->
+      <div class="tab-pane fade" id="search" [ngClass]="{ 'show active': activeTab === 'search' }" role="tabpanel" aria-labelledby="home-tab">
       <div class=" d-grid gap-5">
          <div class="col-12 row ">
           <form [formGroup]="formdata" class="row">
@@ -49,24 +51,59 @@
     </div>
  
     <div class="col-12 " >
-    <app-paggination  [formdata]="formdata"></app-paggination>
+    <app-paggination  [formdata]="formdata" tablename="usermaster"></app-paggination>
        
+  <table class="table  table-hover">
+    <thead>
+        <tr>
+
+            <th>S No.</th>
+            <th  (click)="short('id')"><i class="bi bi-arrow-up-short"></i><i class="bi bi-arrow-down-short"></i>Id </th>
+            <th  (click)="short('name')"><i class="bi bi-arrow-up-short"></i><i class="bi bi-arrow-down-short"></i>Name</th>
+            <th  (click)="short('email')"><i class="bi bi-arrow-up-short"></i><i class="bi bi-arrow-down-short"></i>Email</th>
+            <th  (click)="short('phone')"><i class="bi bi-arrow-up-short"></i><i class="bi bi-arrow-down-short"></i>Phone</th>
+            <th>Update</th>
+            <th>delete</th>
+        </tr>
+    </thead>
+    <tbody>
+      @for (item of records; track item.id){
+        <tr>
+         
+        <td>{{$index+1}}</td>
+        <td>{{ item.id }}</td>
+        <td>{{ item.name }}</td>
+        <td>{{ item.email }}</td>
+        <td>{{ item.phone }}</td>
+        <td class=""><button class='btn px-0 pt-1 pb-1 btn-sm  table-btn ' (click)="edit(item.id)"><i class='bi bi-pencil m-3'  ></i></button></td>
+        <td class=""><button class='btn px-0 pt-1 pb-1 btn-sm  btn-danger table-btn ' (click)="delete(item.id)"><i class='bi bi-trash3 m-3'></i></button></td>
+      </tr>
+        }
+         @empty {
+          <tr>
+        <td colspan="6">There are no items</td>
+      </tr>
+        }
+      
+    </tbody>
+      </table>
     </div>
          </div>
         </div>
-  <div class="tab-pane fade" id="profile" role="tabpanel" aria-labelledby="profile-tab">
-        
+  
+    <div class="tab-pane fade" id="result" [ngClass]="{ 'show active': activeTab === 'result' }" role="tabpanel" aria-labelledby="profile-tab"> 
     <div class="col-12 ">
         <form  class="row" [formGroup]="userdata">
             <div class="col-md-3">
+              <input type="hidden" formControlName="id">
                 <label for="validationCustom01" class="form-label">Name*</label>
-                <input type="text" class="form-control form-control-sm" id="validationCustom01" formControlName="name">
-                <app-validation [formname]="userdata" fieldname="name" label=" Name"  ></app-validation>
+                <input type="text" class="form-control form-control-sm" id="validationCustom01" formControlName="name" maxlength="20">
+                <app-validation [formname]="userdata" fieldname="name" label=" Name" ></app-validation>
               </div>
         
             <div class="col-md-3">
                 <label for="validationCustom01" class="form-label">phone*</label>
-                <input type="text" class="form-control form-control-sm" id="validationCustom01" formControlName="phone" >
+                <input type="text" class="form-control form-control-sm" id="validationCustom01" formControlName="phone"  maxlength="12">
                 <app-validation [formname]="userdata" fieldname="phone" label="Phone" [minlength]=10 ></app-validation>
               </div>
         
@@ -81,12 +118,13 @@
                 <input type="text" class="form-control form-control-sm" id="validationCustom01" formControlName="password">
                 <app-validation [formname]="userdata" fieldname="password" label="Password" [minlength]=8></app-validation>
               </div>
-            <!-- </div> -->
-            <input type="hidden" formControlName="table_name">
-            <input type="hidden" formControlName="action">
+            
+            
             <div class="col-md-3">
             
-                <button class="btn btn-sm button " (click)="submit()">Submit</button>
+                <button class="btn btn-sm button"  *ngIf="isSubmitVisible" (click)="submit()">Submit</button>
+                
+                <button class="btn btn-sm button"  *ngIf="isUpdateVisible"  (click)="update()">Update</button>
             </div>
         </form>
         </div>
