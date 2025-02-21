@@ -4,14 +4,65 @@
     justify-content: space-between;
     align-items: center;
 
-    .page{
-        /* margin-bottom: 20px; */
-        /* border: 2px solid violet; */
-    }
-
-    button{
-        /* border-radius: 0px; */
-        border: 2px solid white;
-        
-    }
 }
+.pagination-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 8px;
+    margin-top: 15px;
+  }
+  
+  .btn {
+    padding: 6px 12px;
+    font-size: 14px;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.2s ease, transform 0.2s ease;
+    box-shadow: 0 3px 5px rgba(0, 0, 0, 0.1);
+  }
+  
+  .btn:hover {
+    background-color: #0056b3;
+    transform: translateY(-1px);
+  }
+  
+  .btn:active {
+    background-color: #003f8e;
+    transform: translateY(0);
+  }
+  
+  .current-page {
+    background-color: #28a745;
+    font-weight: bold;
+    cursor: default;
+  }
+  
+  .btn:disabled {
+    background-color: #6c757d;
+    cursor: not-allowed;
+  }
+  
+  .btn:focus {
+    outline: none;
+  }
+  
+  .pagination-container button {
+    font-family: 'Arial', sans-serif;
+    font-weight: 600;
+  }
+  
+  @media (max-width: 600px) {
+    .pagination-container {
+      gap: 5px;
+    }
+    
+    .btn {
+      font-size: 12px;
+      padding: 5px 10px;
+    }
+  }
+  

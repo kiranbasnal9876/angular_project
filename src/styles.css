@@ -3,12 +3,12 @@ body{
     color: #482669;;
 }
 
-.btn{
-    background-color: #482669 !important;
-    color: white !important;
-
+/* .btn{
+   background-color: #482669 !important;
+    color: white !important; */
+ 
     /* margin-top: 30px; */
-}
+/* } */
 
 .btn:hover{
     color: white;
@@ -28,11 +28,14 @@ thead{
 }
 
 .table-btn{
-
-    /* width: 30px; */
-    padding: 50px;
-    /* text-align: center; */
-
-    background-color: white !important;
+    background-color: #168497 !important;
+    color: white !important; 
     
+
+   
+    
+}
+
+.error{
+    color: red;
 }

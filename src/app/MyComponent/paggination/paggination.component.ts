@@ -1,8 +1,8 @@
-import { Component, inject, Injectable,  input, OnInit } from '@angular/core';
+import { Component, inject, Injectable,  Input,  input, OnInit } from '@angular/core';
 import { FormGroup } from '@angular/forms';
 
 // import { ApiService } from '../../api.service';
-import { UsermasterComponent } from '../usermaster/usermaster.component';
+// import { UsermasterComponent } from '../usermaster/usermaster.component';
 // import { ItemmasterComponent } from '../itemmaster/itemmaster.component';
 
 
@@ -14,55 +14,81 @@ import { UsermasterComponent } from '../usermaster/usermaster.component';
 })
 
 
-export class PagginationComponent {
+export class PagginationComponent  {
 
-user_all_fun = inject(UsermasterComponent);
-// item_all_fun = inject(ItemmasterComponent);
-
-// @Input() tablename : any;
   constructor(){
 
         }
     
 
   formdata = input<FormGroup>() ;
-
-
   
+  page_no = input<number >(0) ;
+  total_records= input<number>(0);
+
+
+@Input()
+public callback: Function | undefined ;
+
+ 
   
   getRows(row:any){
     this.formdata()?.controls['row_no'].setValue(row);
     this.formdata()?.controls['page_no'].setValue(1);
-  
-    this.user_all_fun.getdata()
+    if (this.callback) {
+      this.callback(); 
 
-    
-//  this.item_all_fun.getdata();
-    console.log("itemmaster");
+    }
       
    
   }
 
 
   left(){
-   if(this.user_all_fun.page_no > 1){
-     this.formdata()?.controls['page_no'].setValue(this.user_all_fun.page_no-1);
-     this.user_all_fun.getdata();
-    //  this.item_all_fun.getdata();
+   if(this.page_no() > 1){
+     this.formdata()?.controls['page_no'].setValue(this.page_no()-1);
+     if (this.callback) {
+      this.callback(); 
+
+    }
      
    }
   }
 
+
+
   right(){
 
-    if(this.user_all_fun.total_records > this.user_all_fun.page_no){
-      this.formdata()?.controls['page_no'].setValue(this.user_all_fun.page_no+1);
-      this.user_all_fun.getdata();
-      
+    if(this.total_records() > this.page_no()){
+      this.formdata()?.controls['page_no'].setValue(this.page_no()+1);
+      if (this.callback) {
+        this.callback(); 
+  
+      }
       
 
     }
 
   }
+
+
+  first(){
+    this.formdata()?.controls['page_no'].setValue(1);
+    if (this.callback) {
+      this.callback(); 
+
+    }
+  }
+
+  last(){
+
+    this.formdata()?.controls['page_no'].setValue(this.total_records());
+    if (this.callback) {
+      this.callback(); 
+
+    }
+
+  }
+
 
 }

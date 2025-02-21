@@ -38,12 +38,13 @@
           
           <div class="col-md-1">
             
-              <button class="btn  button btn-sm" (click)="search()">Search</button>
+
+              <button class="btn  button table-btn btn-sm" (click)="search()">Search</button>
              
           </div>
           <div class="col-md-1">
             
-            <button class="btn  button btn-sm" (click)="reset()">Reset</button>
+            <button class="btn  button table-btn btn-sm" (click)="reset()">Reset</button>
              
           </div>
 
@@ -51,17 +52,17 @@
     </div>
  
     <div class="col-12 " >
-    <app-paggination  [formdata]="formdata" tablename="usermaster"></app-paggination>
+    <app-paggination  [formdata]="formdata" [page_no]="page_no" [callback]="getdata.bind(this)" [total_records]="total_records" ></app-paggination>
        
   <table class="table  table-hover">
     <thead>
         <tr>
 
             <th>S No.</th>
-            <th  (click)="short('id')"><i class="bi bi-arrow-up-short"></i><i class="bi bi-arrow-down-short"></i>Id </th>
-            <th  (click)="short('name')"><i class="bi bi-arrow-up-short"></i><i class="bi bi-arrow-down-short"></i>Name</th>
-            <th  (click)="short('email')"><i class="bi bi-arrow-up-short"></i><i class="bi bi-arrow-down-short"></i>Email</th>
-            <th  (click)="short('phone')"><i class="bi bi-arrow-up-short"></i><i class="bi bi-arrow-down-short"></i>Phone</th>
+            <th  (click)="sort('id')"><i class="bi bi-arrow-up-short"></i><i class="bi bi-arrow-down-short"></i>Id </th>
+            <th  (click)="sort('name')"><i class="bi bi-arrow-up-short"></i><i class="bi bi-arrow-down-short"></i>Name</th>
+            <th  (click)="sort('email')"><i class="bi bi-arrow-up-short"></i><i class="bi bi-arrow-down-short"></i>Email</th>
+            <th  (click)="sort('phone')"><i class="bi bi-arrow-up-short"></i><i class="bi bi-arrow-down-short"></i>Phone</th>
             <th>Update</th>
             <th>delete</th>
         </tr>
@@ -75,8 +76,8 @@
         <td>{{ item.name }}</td>
         <td>{{ item.email }}</td>
         <td>{{ item.phone }}</td>
-        <td class=""><button class='btn px-0 pt-1 pb-1 btn-sm  table-btn ' (click)="edit(item.id)"><i class='bi bi-pencil m-3'  ></i></button></td>
-        <td class=""><button class='btn px-0 pt-1 pb-1 btn-sm  btn-danger table-btn ' (click)="delete(item.id)"><i class='bi bi-trash3 m-3'></i></button></td>
+        <td class=""><button class='btn px-0 pt-1 pb-1 btn-sm btn-primary  ' (click)=" edit_delete(item.id,'edit')"><i class='bi bi-pencil m-3'  ></i></button></td>
+        <td class=""><button class='btn px-0 pt-1 pb-1 btn-sm  btn-danger ' (click)=" edit_delete(item.id,'delete')"><i class='bi bi-trash3 m-3'></i></button></td>
       </tr>
         }
          @empty {
@@ -96,35 +97,35 @@
         <form  class="row" [formGroup]="userdata">
             <div class="col-md-3">
               <input type="hidden" formControlName="id">
-                <label for="validationCustom01" class="form-label">Name*</label>
-                <input type="text" class="form-control form-control-sm" id="validationCustom01" formControlName="name" maxlength="20">
+                <label for="validationCustom01" class="form-label">Name<span class="error">*</span></label>
+                <input type="text" class="form-control form-control-sm" id="validationCustom01" formControlName="name" value="" maxlength="20">
                 <app-validation [formname]="userdata" fieldname="name" label=" Name" ></app-validation>
               </div>
         
             <div class="col-md-3">
-                <label for="validationCustom01" class="form-label">phone*</label>
+                <label for="validationCustom01" class="form-label">phone<span class="error">*</span ></label>
                 <input type="text" class="form-control form-control-sm" id="validationCustom01" formControlName="phone"  maxlength="12">
                 <app-validation [formname]="userdata" fieldname="phone" label="Phone" [minlength]=10 ></app-validation>
               </div>
         
             <div class="col-md-3">
-                <label for="validationCustom01" class="form-label">Email*</label>
+                <label for="validationCustom01" class="form-label">Email<span class="error">*</span></label>
                 <input type="text" class="form-control form-control-sm" id="validationCustom01" formControlName="email">
                 <app-validation [formname]="userdata" fieldname="email" label="Email"  ></app-validation>
               </div>
         
             <div class="col-md-3">
-                <label for="validationCustom01" class="form-label">Password*</label>
-                <input type="text" class="form-control form-control-sm" id="validationCustom01" formControlName="password">
-                <app-validation [formname]="userdata" fieldname="password" label="Password" [minlength]=8></app-validation>
+                <label for="validationCustom01" class="form-label">Password<span class="error">*</span></label>
+                <input type="text" class="form-control form-control-sm" id="validationCustom01" formControlName="PASSWORD">
+                <app-validation [formname]="userdata" fieldname="PASSWORD" label="Password" [minlength]=8></app-validation>
               </div>
             
             
             <div class="col-md-3">
             
-                <button class="btn btn-sm button"  *ngIf="isSubmitVisible" (click)="submit()">Submit</button>
+                <button class="btn table-btn btn-sm button"  *ngIf="isSubmitVisible" (click)="submit()">Submit</button>
                 
-                <button class="btn btn-sm button"  *ngIf="isUpdateVisible"  (click)="update()">Update</button>
+                <button class="btn table-btn btn-sm button"  *ngIf="isUpdateVisible"  (click)="update()">Update</button>
             </div>
         </form>
         </div>

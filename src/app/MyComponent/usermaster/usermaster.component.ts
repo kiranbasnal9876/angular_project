@@ -10,6 +10,7 @@ import { PagginationComponent } from '../paggination/paggination.component';
 import { NgClass, NgIf } from '@angular/common';
 import Swal from 'sweetalert2';
 
+
 export interface dataformate {
 
   table: [],
@@ -27,12 +28,11 @@ export interface dataformate {
 })
 
 
-@Injectable({
-  providedIn: 'root'
-})
 
 
 export class UsermasterComponent implements OnInit, dataformate {
+
+
 
   table: [] = [];
   total_records: number = 0;
@@ -40,9 +40,16 @@ export class UsermasterComponent implements OnInit, dataformate {
 
   records: any[] = [];
   formdata: FormGroup;
+  Data: any;
+
+  // public theCallback:Function | undefined ;
+
+
 
   ngOnInit(): void {
     this.getdata();
+
+    // this.theCallback = this.getdata;
   }
 
 
@@ -64,15 +71,17 @@ export class UsermasterComponent implements OnInit, dataformate {
   }
 
 
+
+
   isSubmitVisible: boolean = true;
   isUpdateVisible: boolean = false;
 
   userdata = new FormGroup({
     id: new FormControl(),
-    name: new FormControl('', [Validators.required]),
-    phone: new FormControl('', [Validators.required, Validators.minLength(10) ,Validators.pattern(/^[0-9]*$/) ]),
+    name: new FormControl('',[Validators.required]),
+    phone: new FormControl('', [Validators.required, Validators.minLength(10), Validators.pattern(/^[0-9]*$/)]),
     email: new FormControl('', [Validators.required, Validators.email]),
-    password: new FormControl('', [Validators.required, Validators.minLength(8), Validators.maxLength(30),Validators.pattern(/^(?=.*\d)(?=.*[!@#$%^&*])(?=.*[a-z])(?=.*[A-Z]).{8,30}$/)]),
+    PASSWORD: new FormControl('', [Validators.required, Validators.minLength(8), Validators.maxLength(30), Validators.pattern(/^(?=.*\d)(?=.*[!@#$%^&*])(?=.*[a-z])(?=.*[A-Z]).{8,30}$/)]),
     table_name: new FormControl('user_master'),
     action: new FormControl('insert'),
   })
@@ -82,7 +91,7 @@ export class UsermasterComponent implements OnInit, dataformate {
 
 
     this.user.postApicall("/paggination/test", this.formdata.value).subscribe((response: any) => {
-      
+
       this.records = response.table;
       this.page_no = response.page_no;
       this.total_records = response.total_records;
@@ -90,6 +99,7 @@ export class UsermasterComponent implements OnInit, dataformate {
     )
 
   }
+
   reset() {
 
     this.formdata.controls['name'].reset();
@@ -120,23 +130,30 @@ export class UsermasterComponent implements OnInit, dataformate {
   result(activeTab: any) {
 
     this.activeTab = activeTab;
-    this.userdata.reset();
+
     this.isSubmitVisible = true;;
     this.isUpdateVisible = false;
 
   }
 
   submit() {
-   
+
     this.userdata.patchValue({
       "action": 'insert',
-      "table_name":"user_master"
+      "table_name": "user_master"
     })
 
 
+    let formData = new FormData();
+    Object.entries(this.userdata.value).forEach(([key, value]) => {
+      if (value !== null && value !== undefined) { // Avoid appending null or undefined
+        formData.append(key, value);
+      }
+    });
 
     if (this.userdata.valid) {
-      this.user.postApicall("/crud_operations/insert", this.userdata.value).subscribe((response: any) => {
+     
+      this.user.postApicall("/crud_operations/insert",formData).subscribe((response: any) => {
 
         if (response.status == 200) {
 
@@ -148,7 +165,7 @@ export class UsermasterComponent implements OnInit, dataformate {
           });
           this.userdata.reset();
           this.searchtab('search');
-        
+
 
         }
       })
@@ -159,26 +176,67 @@ export class UsermasterComponent implements OnInit, dataformate {
     }
   }
 
-  edit(id: number) {
+  edit_delete(id: number, action: string) {
     let obj: any = {
       "id": id,
-      "action": "edit",
+      "action": action,
       "table_name": "user_master"
 
     }
-    this.user.postApicall("/crud_operations/edit_delete_Fun", obj).subscribe((response: any) => {
-      this.userdata.controls['id'].setValue(response.data_for_edit[0].id);
-      this.userdata.controls['name'].setValue(response.data_for_edit[0].name);
+    this.user.postApicall("/crud_operations/edit_delete_Fun", obj).subscribe(
+      (response: any) => {
+        this.Data = response;
 
-      this.userdata.controls['phone'].setValue(response.data_for_edit[0].phone);
-      this.userdata.controls['email'].setValue(response.data_for_edit[0].email);
-    })
 
-    this.result('result');
 
-    this.isSubmitVisible = false;
-    this.isUpdateVisible = true;
+        if (action == "edit") {
 
+          let editValue = this.Data.data_for_edit[0];
+
+          delete editValue.PASSWORD;
+          Object.entries(editValue).forEach(([key, value]) => {
+            if (this.userdata.get(key)) {
+
+              this.userdata.get(key)?.setValue(value);
+            }
+
+          })
+          this.result('result');
+          this.isSubmitVisible = false;
+          this.isUpdateVisible = true;
+        }
+        else {
+          Swal.fire({
+            title: "Are you sure?",
+            text: "You won't be able to revert this!",
+            icon: "warning",
+            showCancelButton: true,
+            confirmButtonColor: "#3085d6",
+            cancelButtonColor: "#d33",
+            confirmButtonText: "Yes, delete it!"
+          }).then((result) => {
+            if (result.isConfirmed) {
+              if (this.Data.data_for_edit == "deleted") {
+                Swal.fire({
+                  title: "deleted successfully!",
+                  icon: "success",
+                  draggable: true,
+
+                });
+                this.getdata();
+
+              }
+             
+            }
+          });
+
+
+        }
+      },
+      (error) => {
+        alert('not a valid call');
+      }
+    );
 
   }
 
@@ -186,7 +244,7 @@ export class UsermasterComponent implements OnInit, dataformate {
 
     this.userdata.patchValue({
       "action": 'update',
-      "table_name":"user_master"
+      "table_name": "user_master"
     })
 
     this.user.postApicall("/crud_operations/update", this.userdata.value).subscribe((response: any) => {
@@ -198,54 +256,14 @@ export class UsermasterComponent implements OnInit, dataformate {
           draggable: true
         });
         this.searchtab('search');
+        this.userdata.reset();
       }
     })
 
   }
 
-  delete(id: number) {
-    let obj = {
-      "action": 'delete',
-      "id": id,
-      "table_name": 'user_master'
-    }
 
-
-    Swal.fire({
-      title: "Are you sure?",
-      text: "You won't be able to revert this!",
-      icon: "warning",
-      showCancelButton: true,
-      confirmButtonColor: "#3085d6",
-      cancelButtonColor: "#d33",
-      confirmButtonText: "Yes, delete it!"
-    }).then((result) => {
-      if (result.isConfirmed) {
-
-
-
-        this.user.postApicall("/crud_operations/edit_delete_Fun", obj).subscribe((response: any) => {
-
-          if (response.data_for_edit == "deleted") {
-            Swal.fire({
-              title: "deleted successfully!",
-              icon: "success",
-              draggable: true,
-
-            });
-            this.getdata();
-
-          }
-        })
-      }
-    });
-
-  }
-
-
-
-
-  short(name: string) {
+  sort(name: string) {
 
     if (this.formdata.controls['order'].value == "DESC") {
       this.formdata.controls['order'].setValue("ASC");

@@ -41,13 +41,14 @@ export class ItemmasterComponent  implements OnInit, dataformate{
   
     records: any[] = [];
     formdata: FormGroup;
+     Data: any;
   
     ngOnInit(): void {
       this.getdata();
     }
   
   
-    constructor(private http: HttpClient, private user: ApiService) {
+    constructor(private http: HttpClient, private api: ApiService) {
   
   
       this.formdata = new FormGroup({
@@ -81,11 +82,12 @@ export class ItemmasterComponent  implements OnInit, dataformate{
     getdata() {
   
   
-      this.user.postApicall("/paggination/test", this.formdata.value).subscribe((response: any) => {
+      this.api.postApicall("/paggination/test", this.formdata.value).subscribe((response: any) => {
         
         this.records = response.table;
         this.page_no = response.page_no;
         this.total_records = response.total_records;
+       
       }
       )
   
@@ -119,132 +121,130 @@ export class ItemmasterComponent  implements OnInit, dataformate{
     result(activeTab: any) {
   
       this.activeTab = activeTab;
-      this.itemdata.reset();
+     
       this.isSubmitVisible = true;;
       this.isUpdateVisible = false;
   
     }
   
-    submit() {
+    submit_Update(action:string) {
      
       this.itemdata.patchValue({
-        "action": 'insert',
+        "action": action,
         "table_name":"item_master"
       })
   
   
-  
-      if (this.itemdata.valid) {
-        this.user.postApicall("/crud_operations/insert", this.itemdata.value).subscribe((response: any) => {
-  
-          if (response.status == 200) {
-  
-            this.itemdata.reset();
-            Swal.fire({
-              title: "Data inserted  successfully!",
-              icon: "success",
-              draggable: true
-            });
-            this.itemdata.reset();
-            this.searchtab('search');
-          
-  
-          }
-        })
-  
-      }
-      else {
-        this.itemdata.markAllAsTouched();
-      }
-    }
-  
-    edit(id: number) {
-      let obj: any = {
-        "id": id,
-        "action": "edit",
-        "table_name": "item_master"
-  
-      }
-      this.user.postApicall("/crud_operations/edit_delete_Fun", obj).subscribe((response: any) => {
-        this.itemdata.controls['id'].setValue(response.data_for_edit[0].id);
-        this.itemdata.controls['itemName'].setValue(response.data_for_edit[0].name);
-  
-        this.itemdata.controls['itemD'].setValue(response.data_for_edit[0].phone);
-        this.itemdata.controls['itemPath'].setValue(response.data_for_edit[0].email);
-      })
-  
-      this.result('result');
-  
-      this.isSubmitVisible = false;
-      this.isUpdateVisible = true;
-  
-  
-    }
-  
-    update() {
-  
-      this.itemdata.patchValue({
-        "action": 'update',
-        "table_name":"item_master"
-      })
-  
-      this.user.postApicall("/crud_operations/update", this.itemdata.value).subscribe((response: any) => {
-  
+      let formdata = new FormData();
+      Object.entries(this.itemdata.value).forEach(([key, value]) => {
+        formdata.append(key, value); 
+      });
+  if(action =='insert'){
+
+    if (this.itemdata.valid) {
+      this.api.postApicall("/crud_operations/insert", formdata).subscribe((response: any) => {
+
         if (response.status == 200) {
+
+          this.itemdata.reset();
           Swal.fire({
-            title: "Updated successfully!",
+            title: "Data inserted  successfully!",
             icon: "success",
             draggable: true
           });
+          this.itemdata.reset();
           this.searchtab('search');
+        
+
         }
       })
-  
+
     }
+    else {
+      this.itemdata.markAllAsTouched();
+    }
+  }
+else{
+
+  this.api.postApicall("/crud_operations/update", formdata).subscribe((response: any) => {
   
-    delete(id: number) {
-      let obj = {
-        "action": 'delete',
-        "id": id,
-        "table_name": 'item_master'
-      }
-  
-  
+    if (response.status == 200) {
       Swal.fire({
-        title: "Are you sure?",
-        text: "You won't be able to revert this!",
-        icon: "warning",
-        showCancelButton: true,
-        confirmButtonColor: "#3085d6",
-        cancelButtonColor: "#d33",
-        confirmButtonText: "Yes, delete it!"
-      }).then((result) => {
-        if (result.isConfirmed) {
-  
-  
-  
-          this.user.postApicall("/crud_operations/edit_delete_Fun", obj).subscribe((response: any) => {
-  
-            if (response.data_for_edit == "deleted") {
-              Swal.fire({
-                title: "deleted successfully!",
-                icon: "success",
-                draggable: true,
-  
-              });
-              this.getdata();
-  
-            }
-          })
-        }
+        title: "Updated successfully!",
+        icon: "success",
+        draggable: true
       });
+      this.searchtab('search');
+      this.itemdata.reset();
+    }
+  })
+}
+
+    }
+  
+  edit_delete(id: number, action: string) {
+      let obj: any = {
+        "id": id,
+        "action": action,
+        "table_name": "item_master"
+  
+      }
+      this.api.postApicall("/crud_operations/edit_delete_Fun", obj).subscribe(
+        (response: any) => {
+          this.Data = response;
+  
+          if (action == "edit") {
+  
+            let editValue = this.Data.data_for_edit[0];
+  
+            delete editValue.itemPath;
+            Object.entries(editValue).forEach(([key, value]) => {
+              if (this.itemdata.get(key)) {
+  
+                this.itemdata.get(key)?.setValue(value);
+              }
+  
+            })
+            this.result('result');
+            this.isSubmitVisible = false;
+            this.isUpdateVisible = true;
+          }
+          else {
+            Swal.fire({
+              title: "Are you sure?",
+              text: "You won't be able to revert this!",
+              icon: "warning",
+              showCancelButton: true,
+              confirmButtonColor: "#3085d6",
+              cancelButtonColor: "#d33",
+              confirmButtonText: "Yes, delete it!"
+            }).then((result) => {
+              if (result.isConfirmed) {
+                if (this.Data.data_for_edit == "deleted") {
+                  Swal.fire({
+                    title: "deleted successfully!",
+                    icon: "success",
+                    draggable: true,
+  
+                  });
+                  this.getdata();
+  
+                }
+               
+              }
+            });
+          }
+        },
+        (error) => {
+          alert('not a valid call');
+        }
+      );
   
     }
   
+ 
   
-  
-  
-    short(name: string) {
+    sort(name: string) {
   
       if (this.formdata.controls['order'].value == "DESC") {
         this.formdata.controls['order'].setValue("ASC");

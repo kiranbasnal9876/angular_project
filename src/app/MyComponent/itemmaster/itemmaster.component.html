@@ -31,12 +31,12 @@
           
           <div class="col-md-1">
             
-              <button class="btn  button btn-sm" (click)="search()">Search</button>
+              <button class="btn table-btn button btn-sm" (click)="search()">Search</button>
              
           </div>
           <div class="col-md-1">
             
-            <button class="btn  button btn-sm" (click)="reset()">Reset</button>
+            <button class="btn table-btn button btn-sm" (click)="reset()">Reset</button>
              
           </div>
 
@@ -44,17 +44,18 @@
     </div>
  
     <div class="col-12 " >
-    <app-paggination  [formdata]="formdata" ></app-paggination>
+      <app-paggination  [formdata]="formdata" [page_no]="page_no" [callback]="getdata.bind(this)" [total_records]="total_records"></app-paggination>
        
   <table class="table  table-hover">
     <thead>
         <tr>
 
             <th>S No.</th>
-            <th  (click)="short('id')"><i class="bi bi-arrow-up-short"></i><i class="bi bi-arrow-down-short"></i>Id </th>
-            <th  (click)="short('itemName')"><i class="bi bi-arrow-up-short"></i><i class="bi bi-arrow-down-short"></i>Item Name</th>
+            <th  (click)="sort('id')"><i class="bi bi-arrow-up-short"></i><i class="bi bi-arrow-down-short"></i>Id </th>
+            <th  (click)="sort('itemName')"><i class="bi bi-arrow-up-short"></i><i class="bi bi-arrow-down-short"></i>Item Name</th>
+            <th  (click)="sort('itemPrice')"><i class="bi bi-arrow-up-short"></i><i class="bi bi-arrow-down-short"></i>Price</th>
             <th >Description</th>
-            <th >Image</th>
+            <th  class="text-center">Image</th>
             <th>Update</th>
             <th>delete</th>
         </tr>
@@ -66,10 +67,11 @@
         <td>{{$index+1}}</td>
         <td>{{ item.id }}</td>
         <td>{{ item.itemName }}</td>
+        <td>{{ item.itemPrice }}</td>
         <td>{{ item.itemD }}</td>
-        <td>{{ item.itemPath }}</td>
-        <td><button class='btn  btn-sm' (click)="edit(item.id)"><i class='bi bi-pencil m-3'  ></i></button></td>
-        <td><button class='btn  btn-sm' (click)="delete(item.id)"><i class='bi bi-trash3 m-3'></i></button></td>
+        <td class="text-center"><img width="30px" src="http://localhost/First_CI_Project/folder/{{item.itemPath}}" alt=""></td>
+        <td><button class='btn btn-primary btn-sm' (click)="edit_delete(item.id,'edit')"><i class='bi bi-pencil m-3'  ></i></button></td>
+        <td><button class='btn btn-danger  btn-sm' (click)="edit_delete(item.id,'delete')"><i class='bi bi-trash3 m-3'></i></button></td>
       </tr>
         }
          @empty {
@@ -116,9 +118,9 @@
             
             <div class="col-md-3">
             
-                <button class="btn btn-sm button"  *ngIf="isSubmitVisible" (click)="submit()">Submit</button>
+                <button class="btn table-btn btn-sm button"  *ngIf="isSubmitVisible" (click)="submit_Update('insert')">Submit</button>
                 
-                <button class="btn btn-sm button"  *ngIf="isUpdateVisible"  (click)="update()">Update</button>
+                <button class="btn table-btn btn-sm button"  *ngIf="isUpdateVisible"  (click)="submit_Update('update')">Update</button>
             </div>
         </form>
         </div>
