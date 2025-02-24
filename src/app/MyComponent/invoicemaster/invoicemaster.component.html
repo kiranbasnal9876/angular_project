@@ -1,1 +1,275 @@
-<p>invoicemaster works!</p>
+<ul class="nav nav-tabs" id="myTab" role="tablist">
+    <li class="nav-item" role="presentation">
+        <button class="nav-link active" id="home-tab" [ngClass]="{ 'active':activeTab==='search'}"
+            (click)="searchtab('search')" data-bs-toggle="tab" data-bs-target="#home" type="button" role="tab"
+            aria-controls="home" aria-selected="true">Home</button>
+    </li>
+    <li class="nav-item" role="presentation">
+        <button class="nav-link" id="profile-tab" data-bs-toggle="tab" [ngClass]="{ 'active':activeTab==='result'}"
+            (click)="result('result')" data-bs-target="#profile" type="button" role="tab" aria-controls="profile"
+            aria-selected="false">Profile</button>
+    </li>
+
+</ul>
+<div class="tab-content" id="myTabContent ">
+    <div class="tab-pane fade" id="search" [ngClass]="{ 'show active': activeTab === 'search' }" role="tabpanel"
+        aria-labelledby="home-tab">
+        <div class=" d-grid gap-5">
+            <div class="col-12 row ">
+                <form [formGroup]="formdata" class="row">
+                    <div class="col-md-2">
+                        <label for="validationCustom05" class="form-label">Invoice no</label>
+                        <input type="number" class="form-control form-control-sm text-end" id="validationCustom05"
+                            formControlName="invoice_no">
+
+                    </div>
+                    <div class="col-md-2">
+                        <label for="validationCustom01" class="form-label">Client Name</label>
+                        <input type="text" class="form-control form-control-sm" id="validationCustom01"
+                            formControlName="name">
+                    </div>
+
+                    <div class="col-md-2">
+                        <label for="validationCustom01" class="form-label">phone</label>
+                        <input type="number" class="form-control form-control-sm" id="validationCustom01"
+                            formControlName="phone">
+                    </div>
+
+                    <div class="col-md-2">
+                        <label for="validationCustom01" class="form-label">Email</label>
+                        <input type="text" class="form-control form-control-sm" id="validationCustom01"
+                            formControlName="email">
+                    </div>
+
+
+                    <div class="col-md-2">
+                        <label for="validationCustom05" class="form-label">Invoice Date</label>
+                        <input type="date" class="form-control form-control-sm" id="validationCustom05"
+                            formControlName="invoice_date">
+
+                    </div>
+
+                    <input type="hidden" formControlName="colname">
+                    <input type="hidden" formControlName="order">
+                    <input type="hidden" formControlName="page_no">
+                    <input type="hidden" formControlName="row_no">
+
+                    <div class="col-md-1">
+
+
+                        <button class="btn  button table-btn btn-sm" (click)="search()">Search</button>
+
+                    </div>
+                    <div class="col-md-1">
+
+                        <button class="btn  button table-btn btn-sm" (click)="reset()">Reset</button>
+
+                    </div>
+
+                </form>
+            </div>
+
+            <div class="col-12 ">
+                <app-paggination [formdata]="formdata" [page_no]="page_no" [callback]="getdata.bind(this)"
+                    [total_records]="total_records"></app-paggination>
+
+                <table class="table  table-hover">
+                    <thead>
+                        <tr>
+
+                            <th>S No.</th>
+                            <th (click)="sort('invoice_no')"><i class="bi bi-arrow-up-short"></i><i
+                                    class="bi bi-arrow-down-short"></i>Invoice No </th>
+                                    <th (click)="sort('invoice_date')"><i class="bi bi-arrow-up-short"></i><i
+                                        class="bi bi-arrow-down-short"></i>Invoice Date</th>
+                            <th (click)="sort('name')"><i class="bi bi-arrow-up-short"></i><i
+                                    class="bi bi-arrow-down-short"></i>Name</th>
+                            <th (click)="sort('email')"><i class="bi bi-arrow-up-short"></i><i
+                                    class="bi bi-arrow-down-short"></i>Email</th>
+                            <th (click)="sort('phone')"><i class="bi bi-arrow-up-short"></i><i
+                                    class="bi bi-arrow-down-short"></i>Phone</th>
+
+                            <th>Address</th>
+                            <th>Email</th>
+                            <th>PDF</th>
+                            <th>Update</th>
+                            <th>delete</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @for (item of records; track item.id){
+                        <tr>
+
+                            <td>{{$index+1}}</td>
+                            <td>{{ item.invoice_no}}</td>
+                            <td>{{ item.invoice_date }}</td>
+                            <td>{{ item.name }}</td>
+                            <td>{{ item.email }}</td>
+                            <td>{{ item.phone }}</td>
+                            <td>{{ item.address }}</td>
+                            <td class="text-danger">
+                                <a href="{{base_url}}/Invoice_crudOperations/invoice_pdf?id={{item.id}}" target='_blank'>
+                                <i class='bi bi-file-earmark-pdf-fill text-danger pdf'></i></a></td>
+                            <td class="text-primary"><i class="bi bi-envelope-arrow-down-fill"></i></td>
+                            
+                            <td class=""><button class='btn px-0 pt-1 pb-1 btn-sm btn-primary  '
+                                    (click)=" edit_delete(item.id,'edit')"><i class='bi bi-pencil m-3'></i></button>
+                            </td>
+                            <td class=""><button class='btn px-0 pt-1 pb-1 btn-sm  btn-danger '
+                                    (click)=" edit_delete(item.id,'delete')"><i class='bi bi-trash3 m-3'></i></button>
+                            </td>
+                        </tr>
+                        }
+                        @empty {
+                        <tr>
+                            <td colspan="6">There are no items</td>
+                        </tr>
+                        }
+
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <div class="tab-pane fade" id="result" [ngClass]="{ 'show active': activeTab === 'result' }" role="tabpanel"
+        aria-labelledby="profile-tab">
+        <div class="col-12  gap-5 ">
+            <form class="row" [formGroup]="invoicedata">
+
+                <div class="col-12 row">
+
+                    <div class="col-md-3">
+                        <label for="validationCustom05" class="form-label">Invoice No<span
+                                class="error">*</span></label>
+                        <input type="number" class="form-control form-control-sm  text-end" id="validationCustom05"
+                            formControlName="invoice_no">
+                        <app-validation [formname]="invoicedata" fieldname="invoice_no"
+                            label=" Invoice No"></app-validation>
+                    </div>
+                    <div class="col-md-3">
+                        <label for="validationCustom05" class="form-label">Invoice Date<span
+                                class="error">*</span></label>
+                        <input type="date" class="form-control form-control-sm" id="validationCustom05"
+                            formControlName="invoice_date">
+                        <app-validation [formname]="invoicedata" fieldname="invoice_date"
+                            label=" Invoice Date"></app-validation>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <input type="hidden" formControlName="id">
+                    <label for="validationCustom01" class="form-label">Client Name<span class="error">*</span></label>
+                    <input type="text" class="form-control form-control-sm" id="validationCustom01"
+                        formControlName="name" value="" maxlength="20">
+                    <app-validation [formname]="invoicedata" fieldname="name" label=" Name"></app-validation>
+                    <input type="hidden" formControlName="client_id">
+                </div>
+
+                <div class="col-md-3">
+                    <label for="validationCustom01" class="form-label">phone<span class="error">*</span></label>
+                    <input type="text" class="form-control form-control-sm" id="validationCustom01"
+                        formControlName="phone" maxlength="12">
+                    <app-validation [formname]="invoicedata" fieldname="phone" label="Phone"
+                        [minlength]=10></app-validation>
+                </div>
+
+                <div class="col-md-3">
+                    <label for="validationCustom01" class="form-label">Email<span class="error">*</span></label>
+                    <input type="text" class="form-control form-control-sm" id="validationCustom01"
+                        formControlName="email">
+                    <app-validation [formname]="invoicedata" fieldname="email" label="Email"></app-validation>
+                </div>
+
+                <div class="col-md-3">
+                    <label for="validationCustom01" class="form-label">Address<span class="error">*</span></label>
+                    <input type="text" class="form-control form-control-sm" id="validationCustom01"
+                        formControlName="address">
+                    <app-validation [formname]="invoicedata" fieldname="address" label="Address"
+                        [minlength]=200></app-validation>
+                </div>
+
+
+
+
+
+                <div class="col-12 mt-5 row shadow p-3 mb-5 bg-body rounded" formArrayName="items" >
+                <div class="col-12 row" *ngFor="let item of items.controls; let i = index" [formGroupName]="i">
+                  
+                  
+
+
+                    <div class="col-md-3">
+                        <input type="hidden" formControlName="item_id">
+                        <label for="validationCustom01" class="form-label">Item Name<span class="error">*</span></label>
+                        <input type="text" class="form-control form-control-sm" id="validationCustom01"
+                            formControlName="itemName" #itemname value="" maxlength="20" >
+
+                            <app-autocomplete [valueName]="itemname.value" ></app-autocomplete>
+
+                     
+                        <app-validation [formname]="invoicedata" fieldname="itemName"
+                            label=" Item Name"></app-validation>
+                        <input type="hidden" formArrayName="item_id">
+                    </div>
+
+                    <div class="col-md-2">
+                        <label for="validationCustom01" class="form-label">Item Price<span
+                                class="error">*</span></label>
+                        <input type="text" class="form-control form-control-sm text-end" id="validationCustom01"
+                            formControlName="itemPrice" maxlength="12" readonly>
+                        <app-validation [formname]="invoicedata" fieldname="itemPrice" label="Item Price"
+                            [maxlength]=20 ></app-validation>
+                    </div>
+
+                    <div class="col-md-3">
+                        <label for="validationCustom01" class="form-label">Quantity<span class="error">*</span></label>
+                        <input type="number" class="form-control form-control-sm text-end" id="validationCustom01"
+                            formControlName="quantity">
+                        <app-validation [formname]="invoicedata" fieldname="quantity" label="Quantity"></app-validation>
+                    </div>
+
+                    <div class="col-md-3">
+                        <label for="validationCustom01" class="form-label">Amount<span class="error">*</span></label>
+                        <input type="text" class="form-control form-control-sm text-end" id="validationCustom01"
+                            formControlName="amount" readonly>
+                       
+                    </div>
+
+
+
+
+                    <div class="col-md-1">
+
+                        <button class="btn btn-danger btn-sm button" (click)="deleteItem(i)"><i class='bi bi-trash3 m-3'></i></button>
+
+
+                    </div>
+                </div>
+            </div>
+
+                    <div class="col-12 row add-btn">
+                        <div class="col-md-2 mt-5">
+
+                            <button class="btn btn-sm btn-primary" (click)="addItem()">Add More</button>
+                        </div>
+                        <div class="col-md-3 ">
+
+                            <label for="validationCustom01" class="form-label">Total Amount<span class="error">*</span></label>
+                            <input type="number" class="form-control text-end form-control-sm" id="validationCustom01"
+                                formControlName="total_amount" readonly>
+                        </div>
+
+                    </div>
+
+                <div class="col-md-12">
+                    
+                    <button class="btn table-btn btn-sm button" *ngIf="isSubmitVisible"
+                        (click)="submit()">Submit</button>
+
+                    <button class="btn table-btn btn-sm button" *ngIf="isUpdateVisible"
+                        (click)="update()">Update</button>
+                </div>
+            </form>
+        </div>
+
+    </div>

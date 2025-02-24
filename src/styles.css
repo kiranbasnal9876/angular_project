@@ -39,3 +39,13 @@ thead{
 .error{
     color: red;
 }
+
+th{
+    font-size: 13px;
+    white-space:nowrap;
+}
+/* td{
+    font-size: 13px;
+} */
+html, body { height: 100%; }
+body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }

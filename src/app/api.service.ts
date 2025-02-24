@@ -13,15 +13,16 @@ export class ApiService {
 
   postApicall(controllerName: String, data: any) {
 
-    return this.http.post("http://localhost/First_CI_Project" + controllerName, data,
-      {
-        // headers: {
-        //   'Content-Type': 'application/json'
-        // }
-      }
+    return this.http.post("http://localhost/Angular_Project/First_CI_Project" + controllerName, data,
+      // {
+      //   headers: {
+      //     'Content-Type': 'application/json'
+      //   }
+      // }
     )
 
   }
+  
 
 
 

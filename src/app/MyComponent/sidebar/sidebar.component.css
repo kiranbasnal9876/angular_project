@@ -62,3 +62,12 @@ height: calc( 100vh - 57px);
 .content{
     overflow-y: auto;
 }
+
+.active-link{
+
+    background-color: #482669;
+    span{
+        color: white;
+    }
+   
+}

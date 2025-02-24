@@ -42,14 +42,14 @@ export class UsermasterComponent implements OnInit, dataformate {
   formdata: FormGroup;
   Data: any;
 
-  // public theCallback:Function | undefined ;
+  public theCallback:Function | undefined ;
 
 
 
   ngOnInit(): void {
     this.getdata();
 
-    // this.theCallback = this.getdata;
+    this.theCallback = this.getdata;
   }
 
 
@@ -110,7 +110,7 @@ export class UsermasterComponent implements OnInit, dataformate {
 
   }
 
-  search() {
+  search(){
     this.formdata.controls['page_no'].setValue(1)
     this.getdata();
   }
@@ -146,9 +146,7 @@ export class UsermasterComponent implements OnInit, dataformate {
 
     let formData = new FormData();
     Object.entries(this.userdata.value).forEach(([key, value]) => {
-      if (value !== null && value !== undefined) { // Avoid appending null or undefined
         formData.append(key, value);
-      }
     });
 
     if (this.userdata.valid) {
@@ -166,6 +164,25 @@ export class UsermasterComponent implements OnInit, dataformate {
           this.userdata.reset();
           this.searchtab('search');
 
+
+        }
+        else{
+          if(response.errors.email){
+
+            Swal.fire({
+              icon: "error",
+              title: "Oops...",
+              text: response.errors.email,
+             
+            });
+          }{
+            Swal.fire({
+              icon: "error",
+              title: "Oops...",
+              text: response.errors.phone,
+             
+            });
+          }
 
         }
       })
@@ -246,6 +263,11 @@ export class UsermasterComponent implements OnInit, dataformate {
       "action": 'update',
       "table_name": "user_master"
     })
+
+    let formData = new FormData();
+    Object.entries(this.userdata.value).forEach(([key, value]) => {
+        formData.append(key, value);
+    });
 
     this.user.postApicall("/crud_operations/update", this.userdata.value).subscribe((response: any) => {
 

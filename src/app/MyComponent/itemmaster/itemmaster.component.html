@@ -21,9 +21,7 @@
             <label for="validationCustom01" class="form-label">Name</label>
             <input type="text" class="form-control form-control-sm" id="validationCustom01" formControlName="itemName">
           </div>
-    
-       
-      
+
           <input type="hidden" formControlName="colname">
           <input type="hidden" formControlName="order">
           <input type="hidden" formControlName="page_no">
@@ -69,9 +67,9 @@
         <td>{{ item.itemName }}</td>
         <td>{{ item.itemPrice }}</td>
         <td>{{ item.itemD }}</td>
-        <td class="text-center"><img width="30px" src="http://localhost/First_CI_Project/folder/{{item.itemPath}}" alt=""></td>
-        <td><button class='btn btn-primary btn-sm' (click)="edit_delete(item.id,'edit')"><i class='bi bi-pencil m-3'  ></i></button></td>
-        <td><button class='btn btn-danger  btn-sm' (click)="edit_delete(item.id,'delete')"><i class='bi bi-trash3 m-3'></i></button></td>
+        <td class="text-center"><img width="30px" src="{{Upload_Folder}}{{item.itemPath}}" alt=""></td>
+        <td><button class='btn btn-primary px-0 pt-1 pb-1 btn-sm' (click)="edit_delete(item.id,'edit')"><i class='bi bi-pencil m-3'  ></i></button></td>
+        <td><button class='btn btn-danger  px-0 pt-1 pb-1 btn-sm' (click)="edit_delete(item.id,'delete')"><i class='bi bi-trash3 m-3'></i></button></td>
       </tr>
         }
          @empty {
@@ -91,30 +89,34 @@
         <form  class="row" [formGroup]="itemdata">
             <div class="col-md-3">
               <input type="hidden" formControlName="id">
-                <label for="validationCustom01" class="form-label">Item Name*</label>
+                <label for="validationCustom01" class="form-label">Item Name <span class="error">*</span></label>
                 <input type="text" class="form-control form-control-sm" id="validationCustom01" formControlName="itemName" maxlength="20">
                 <app-validation [formname]="itemdata" fieldname="itemName" label=" Item Name" ></app-validation>
               </div>
         
               <div class="col-md-3">
-                <label for="validationCustom01" class="form-label">Price*</label>
-                <input type="text" class="form-control form-control-sm" id="validationCustom01" formControlName="itemPrice">
+                <label for="validationCustom01" class="form-label">Price<span class="error">*</span></label>
+                <input type="text" class="form-control form-control-sm text-end" id="validationCustom01" formControlName="itemPrice">
                 <app-validation [formname]="itemdata" fieldname="itemPrice" label="Price" [maxlength]=20></app-validation>
               </div>
             <div class="col-md-3">
-                <label for="validationCustom01" class="form-label">Description*</label>
+                <label for="validationCustom01" class="form-label">Description<span class="error">*</span></label>
                 <textarea type="text" class="form-control form-control-sm" id="validationCustom01" formControlName="itemD"  maxlength="12"></textarea>
                 <app-validation [formname]="itemdata" fieldname="itemD" label="Description" ></app-validation>
               </div>
         
             <div class="col-md-3">
-                <label for="validationCustom01" class="form-label">Image*</label>
-                <input type="file" class="form-control form-control-sm" id="validationCustom01" formControlName="itemPath">
+                <label for="validationCustom01" class="form-label">Image<span class="error">*</span></label>
+                <input type="file" class="form-control form-control-sm col-md-2"  (change)="onChange($event)" id="validationCustom01" formControlName="itemPath">
                 <app-validation [formname]="itemdata" fieldname="itemPath" label="Image"  ></app-validation>
+                  <div class="col-md-2 w-20 h-20"></div>
               </div>
-        
+              <div class="mb-3" [ngClass]="{'d-none':imageDiv}">
+                <span><img style="margin-right: 10px;" width="10%" [src]='imageUrl' alt="" accept=".jpg, .jpeg, .png, .gif"></span>
+                <button (click)="clearImage()" class="btn btn-danger btn sm pt-0 pb-0">X</button>
+            </div>
            
-            
+             
             
             <div class="col-md-3">
             

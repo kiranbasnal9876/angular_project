@@ -1,1 +1,165 @@
-<p>clientmaster works!</p>
+
+
+<ul class="nav nav-tabs" id="myTab" role="tablist">
+    <li class="nav-item" role="presentation">
+      <button class="nav-link active" id="home-tab" [ngClass]="{ 'active':activeTab==='search'}" (click)="searchtab('search')" data-bs-toggle="tab" data-bs-target="#home" type="button" role="tab" aria-controls="home" aria-selected="true">Home</button>
+    </li>
+    <li class="nav-item" role="presentation">
+      <button class="nav-link" id="profile-tab" data-bs-toggle="tab"  [ngClass]="{ 'active':activeTab==='result'}" 
+      (click)="result('result')" data-bs-target="#profile" type="button" role="tab" aria-controls="profile" aria-selected="false">Profile</button>
+    </li>
+  
+  </ul>
+  <div class="tab-content" id="myTabContent ">
+    <!-- <div class="tab-pane fade show active " id="search" [ngClass]="{ 'active':activeTab==='search'}"  role="tabpanel" aria-labelledby="home-tab"> -->
+      <div class="tab-pane fade" id="search" [ngClass]="{ 'show active': activeTab === 'search' }" role="tabpanel" aria-labelledby="home-tab">
+      <div class=" d-grid gap-5">
+         <div class="col-12 row ">
+          <form [formGroup]="formdata" class="row">
+        <div class="col-md-2">
+            <label for="validationCustom01" class="form-label">Name</label>
+            <input type="text" class="form-control form-control-sm" id="validationCustom01" formControlName="name">
+          </div>
+    
+        <div class="col-md-2">
+            <label for="validationCustom01" class="form-label">phone</label>
+            <input type="text" class="form-control form-control-sm" id="validationCustom01"  formControlName="phone">
+          </div>
+    
+        <div class="col-md-3">
+            <label for="validationCustom01" class="form-label">Email</label>
+            <input type="text" class="form-control form-control-sm" id="validationCustom01" formControlName="email">
+          </div>
+        <div class="col-md-3">
+            <label for="validationCustom01" class="form-label">Address</label>
+            <input type="text" class="form-control form-control-sm" id="validationCustom01" formControlName="address">
+          </div>
+      
+          
+          <input type="hidden" formControlName="colname">
+          <input type="hidden" formControlName="order">
+          <input type="hidden" formControlName="page_no">
+          <input type="hidden" formControlName="row_no">
+          
+          <div class="col-md-1">
+            
+
+              <button class="btn  button table-btn btn-sm" (click)="search()">Search</button>
+             
+          </div>
+          <div class="col-md-1">
+            
+            <button class="btn  button table-btn btn-sm" (click)="reset()">Reset</button>
+             
+          </div>
+
+        </form>
+    </div>
+ 
+    <div class="col-12 " >
+    <app-paggination  [formdata]="formdata" [page_no]="page_no" [callback]="getdata.bind(this)" [total_records]="total_records" ></app-paggination>
+       
+  <table class="table  table-hover">
+    <thead>
+        <tr>
+
+            <th>S No.</th>
+            <th  (click)="sort('id')"><i class="bi bi-arrow-up-short"></i><i class="bi bi-arrow-down-short"></i>Id </th>
+            <th  (click)="sort('name')"><i class="bi bi-arrow-up-short"></i><i class="bi bi-arrow-down-short"></i>Name</th>
+            <th  (click)="sort('email')"><i class="bi bi-arrow-up-short"></i><i class="bi bi-arrow-down-short"></i>Email</th>
+            <th  (click)="sort('phone')"><i class="bi bi-arrow-up-short"></i><i class="bi bi-arrow-down-short"></i>Phone</th>
+            <th>Address</th>
+            <th>Update</th>
+            <th>delete</th>
+        </tr>
+    </thead>
+    <tbody>
+      @for (item of records; track item.id){
+        <tr>
+         
+        <td>{{$index+1}}</td>
+        <td>{{ item.id }}</td>
+        <td>{{ item.name }}</td>
+        <td>{{ item.email }}</td>
+        <td>{{ item.phone }}</td>
+        <td>{{ item.address }}</td>
+        <td class=""><button class='btn px-0 pt-1 pb-1 btn-sm btn-primary  ' (click)=" edit_delete(item.id,'edit')"><i class='bi bi-pencil m-3'  ></i></button></td>
+        <td class=""><button class='btn px-0 pt-1 pb-1 btn-sm  btn-danger ' (click)=" edit_delete(item.id,'delete')"><i class='bi bi-trash3 m-3'></i></button></td>
+      </tr>
+        }
+         @empty {
+          <tr>
+        <td colspan="6">There are no items</td>
+      </tr>
+        }
+      
+    </tbody>
+      </table>
+    </div>
+         </div>
+        </div>
+  
+    <div class="tab-pane fade" id="result" [ngClass]="{ 'show active': activeTab === 'result' }" role="tabpanel" aria-labelledby="profile-tab"> 
+    <div class="col-12 ">
+        <form  class="row" [formGroup]="clientdata">
+            <div class="col-md-3">
+              <input type="hidden" formControlName="id">
+                <label for="validationCustom01" class="form-label">Client Name<span class="error">*</span></label>
+                <input type="text" class="form-control form-control-sm" id="validationCustom01" formControlName="name" value="" maxlength="20">
+                <app-validation [formname]="clientdata" fieldname="name" label=" Name" ></app-validation>
+              </div>
+        
+            <div class="col-md-3">
+                <label for="validationCustom01" class="form-label">phone<span class="error">*</span ></label>
+                <input type="text" class="form-control form-control-sm" id="validationCustom01" formControlName="phone"  maxlength="12">
+                <app-validation [formname]="clientdata" fieldname="phone" label="Phone" [minlength]=10 ></app-validation>
+              </div>
+        
+            <div class="col-md-3">
+                <label for="validationCustom01" class="form-label">Email<span class="error">*</span></label>
+                <input type="text" class="form-control form-control-sm" id="validationCustom01" formControlName="email">
+                <app-validation [formname]="clientdata" fieldname="email" label="Email"></app-validation>
+              </div>
+        
+            <div class="col-md-3">
+                <label for="validationCustom01" class="form-label">Address<span class="error">*</span></label>
+                <input type="text" class="form-control form-control-sm" id="validationCustom01" formControlName="address">
+                <app-validation [formname]="clientdata" fieldname="address" label="Address" [minlength]=200></app-validation>
+              </div>
+              <div class="col-md-3">
+                <label for="validationCustom04" class="form-label">State <span class="error">*</span></label>
+                <select #state class="form-select form-select-sm" id="validationCustom04" (change)=" getdistrict(state.value)" formControlName="state_id">
+                  <option selected  value="">Choose...</option>
+                  @for (item of states; track item.id){
+                  <option value={{item.state_id}}>{{item.state_name}}</option>
+                  }
+                </select>
+                <app-validation [formname]="clientdata" fieldname="state_id" label="State"  ></app-validation>
+              </div>
+              <div class="col-md-3">
+                <label for="validationCustom04" class="form-label">District <span class="error">*</span></label>
+                <select class="form-select form-select-sm" id="validationCustom04" formControlName="district_id">
+                  <option selected  value="">Choose...</option>
+                 
+                  @for (item of district; track item.id){
+                  <option value={{item.district_id}}>{{item.district_name}}</option>
+                  }
+                </select>
+                <app-validation [formname]="clientdata" fieldname="district" label="District"></app-validation>
+              </div>
+              <div class="col-md-2">
+                <label for="validationCustom05" class="form-label">Pin Code <span class="error">*</span></label>
+                <input type="text" class="form-control form-control-sm" id="validationCustom05" formControlName="pincode" >
+                <app-validation [formname]="clientdata" fieldname="pincode" label="Pin Code"  [minlength]=4 [maxlength]=8></app-validation>
+              </div>
+            
+            <div class="col-md-3">
+            
+                <button class="btn table-btn btn-sm button"  *ngIf="isSubmitVisible" (click)="submit()">Submit</button>
+                
+                <button class="btn table-btn btn-sm button"  *ngIf="isUpdateVisible"  (click)="update()">Update</button>
+            </div>
+        </form>
+        </div>
+    
+  </div>
