@@ -5,7 +5,10 @@ import { UsermasterComponent } from './MyComponent/usermaster/usermaster.compone
 import { ClientmasterComponent } from './MyComponent/clientmaster/clientmaster.component';
 import { ItemmasterComponent } from './MyComponent/itemmaster/itemmaster.component';
 import { InvoicemasterComponent } from './MyComponent/invoicemaster/invoicemaster.component';
-
+import { HomeComponent } from './MyComponent/home/home.component';
+import { checkLogUserGuard } from './check-log-user.guard';
+import { AuthGuard } from './auth-guard.guard';
+import { UserpermissionComponent } from './MyComponent/userpermission/userpermission.component';
 export const routes: Routes = [
     {
         path: '',
@@ -14,15 +17,26 @@ export const routes: Routes = [
      },
      {
         path:'log-in',
-        component:LogInComponent
+        component:LogInComponent,
+        canActivate: [AuthGuard],
+     
+        
      },
     {
         path:'dashboard',
         component:DashboardComponent,
+         canActivate: [checkLogUserGuard],
+        
         children:[{
             path:'usermaster',
             title:'User Master',
-            component:UsermasterComponent
+            component:UsermasterComponent,
+           
+         },
+         {
+            path:'home',
+            title:'',
+            component:HomeComponent
          },
          {
             path:'clientmaster', 
@@ -38,7 +52,13 @@ export const routes: Routes = [
             path:'invoicemaster',
             title:'Invoice Master',
             component:InvoicemasterComponent
-         }]
+         },
+         {
+            path:'userpermission',
+            title:'User Permission',
+            component:UserpermissionComponent
+         }
+      ]
     },
      
 ];

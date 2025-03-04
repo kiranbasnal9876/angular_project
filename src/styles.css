@@ -44,8 +44,14 @@ th{
     font-size: 13px;
     white-space:nowrap;
 }
-/* td{
+td{
     font-size: 13px;
-} */
+}
 html, body { height: 100%; }
 body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
+
+.edit{
+    font-size: 15px;
+    cursor: pointer;
+    font-weight: 600;
+}

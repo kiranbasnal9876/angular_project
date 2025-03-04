@@ -1,0 +1,19 @@
+thead{
+    /* border: solid black 1px; */
+    tr{
+        td{
+            font-size: 15px;
+            font-weight: 600;
+        }
+    }
+}
+
+.select{
+    display: flex;
+    justify-content: space-between;
+}
+
+.menu{
+    font-family: 15px;
+    font-weight: 600;
+}

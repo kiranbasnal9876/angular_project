@@ -1,0 +1,292 @@
+body,
+html {
+  /* font-family: "Poppins", "serif"; */
+  margin: 0px;
+  padding: 0px;
+  width: 100vw;
+  height: 100vh;
+}
+
+* {
+  box-sizing: border-box;
+  scroll-behavior: smooth;
+  /* font-family: "Poppins", "serif"; */
+}
+
+
+.button {
+
+  align-items: center;
+
+  font-size: 15px;
+}
+
+
+.error-message {
+  color: red;
+}
+
+.right{
+  text-align: right;
+}
+
+.image-div {
+  height: 100vh;
+  background-image: url('http://localhost/First_CI_Project/assets/images/log-image.jpg');
+  padding: 50px;
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-position: center center;
+}
+
+.outer-div {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+  background-color: white;
+  border-radius: 10px;
+
+  /* align-content: right; */
+  input {
+    border-radius: 20px;
+  }
+
+  button {
+    border-radius: 20px;
+    font-size: 15px;
+  }
+
+
+  #welcome_msg {
+    text-align: center;
+  }
+
+  .logo-img {
+    display: flex;
+    justify-content: center;
+
+  }
+}
+
+
+.Main-container {
+
+  height: 100vh;
+  width: 100vw;
+position: relative;
+  .navbar {
+    height: 45px;
+    width: 100vw;
+    display: flex;
+    justify-content: space-between;
+    padding-left: 10px;
+    padding-right: 10px;
+    background-color: rgb(95, 123, 155);
+    border-bottom: 1px solid white;
+    color: white;
+
+    .logo {
+      img {
+        width: 50%;
+      }
+      i{
+        padding-left: 15px;
+      }
+    }
+
+    .user-profile-icon {
+      img {
+        width: 35px;
+        margin-left: 15px;
+
+      }
+
+    }
+  }
+
+  .inner-container {
+    display: flex;
+    height: calc(100% - 45px);
+    position: relative;
+
+    .sidebar {
+      display: flex;
+
+      flex-direction: column;
+      background-color: rgb(95, 123, 155);
+      padding: 15px;
+      height: 100%;
+
+      a {
+        text-decoration: none;
+        width: 100%;
+        color: white;
+        padding: 5px 10px;
+        border-radius: 5px;
+      }
+
+      a:hover {
+        background-color: #02aae5;
+
+      }
+
+      .active {
+        background-color: #02aae5;
+      }
+
+      .logout-div {
+        margin-top: auto;
+
+        a:hover {
+          background-color: transparent;
+          /* height: 20px; */
+        }
+
+        img {
+          width: 20px;
+        }
+      }
+
+    }
+
+    .content {
+      font-size: 15px;
+      height: 100%;
+      overflow-y: auto;
+
+      input,
+      select{
+        height: 35px;
+        font-size: 15px;
+      }
+
+      label{
+        margin-bottom: 5px;
+      }
+
+
+
+      .records-div {
+        padding: 25px;
+        width: 100%;
+        gap: 24px;
+
+        .search-data {
+
+          button {
+
+            margin-top: 25px;
+
+          }
+
+        }
+
+      }
+
+      th {
+        background-color:
+          #5e7b99;
+        color: white;
+        user-select: none;
+        font-size: 12px;
+       white-space: nowrap;
+       margin: 0px;
+       padding: 5px;
+      }
+
+      td {
+      font-size: 12px;
+        button {
+          margin: 0px;
+          padding: 0px;
+        }
+        img{
+          width: 50px;
+          height: auto;
+        }
+
+      }
+
+    }
+  }
+
+
+
+  .page-row {
+    display: flex;
+    justify-content: space-between;
+    padding: 8px;
+
+    select {
+      border-radius: 5px;
+
+    }
+
+    .paggination {
+      .btn:focus{
+        box-shadow: white;
+      }
+    }
+  }
+}
+
+
+
+#show-img {
+
+  #pic {
+    width: 40px;
+    height: 50px;
+
+  }
+}
+
+
+.add-more{
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0px 20px;
+  input{
+    height: 35px;
+  }
+}
+
+.add-new{
+  padding: 0px 0px 21px 21px;
+  
+ margin : 18px 18px 20px 0px;
+  box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
+  button{
+    margin-top: 20px;
+  }
+}
+
+
+.dashboard-container{
+  padding: 30px;
+  
+.border{
+ 
+border-left: 5px solid #5e7b99 !important ;
+border-radius: 5px;
+box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
+
+}
+
+
+   text-align: center;
+    .bi{
+      font-size: 50px;
+      
+    }
+    a{
+      text-decoration: none;
+    }
+
+    
+    .border:hover{
+     margin-top: -10px;
+   }
+ }

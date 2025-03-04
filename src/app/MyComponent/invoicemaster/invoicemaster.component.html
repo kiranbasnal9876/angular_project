@@ -6,7 +6,7 @@
     </li>
     <li class="nav-item" role="presentation">
         <button class="nav-link" id="profile-tab" data-bs-toggle="tab" [ngClass]="{ 'active':activeTab==='result'}"
-            (click)="result('result')" data-bs-target="#profile" type="button" role="tab" aria-controls="profile"
+            (click)="result('result');  getInvoice_number_date(); all_itemsDelete();" data-bs-target="#profile" type="button" role="tab" aria-controls="profile"
             aria-selected="false">Profile</button>
     </li>
 
@@ -19,8 +19,8 @@
                 <form [formGroup]="formdata" class="row">
                     <div class="col-md-2">
                         <label for="validationCustom05" class="form-label">Invoice no</label>
-                        <input type="number" class="form-control form-control-sm text-end" id="validationCustom05"
-                            formControlName="invoice_no">
+                        <input type="number" class="form-control form-control-sm" id="validationCustom05"
+                            formControlName="invoice_no" (keypress)="api.only_number($event)">
 
                     </div>
                     <div class="col-md-2">
@@ -32,7 +32,7 @@
                     <div class="col-md-2">
                         <label for="validationCustom01" class="form-label">phone</label>
                         <input type="number" class="form-control form-control-sm" id="validationCustom01"
-                            formControlName="phone">
+                            formControlName="phone"  (keypress)="api.only_number($event)">
                     </div>
 
                     <div class="col-md-2">
@@ -80,8 +80,8 @@
                             <th>S No.</th>
                             <th (click)="sort('invoice_no')"><i class="bi bi-arrow-up-short"></i><i
                                     class="bi bi-arrow-down-short"></i>Invoice No </th>
-                                    <th (click)="sort('invoice_date')"><i class="bi bi-arrow-up-short"></i><i
-                                        class="bi bi-arrow-down-short"></i>Invoice Date</th>
+                            <th (click)="sort('invoice_date')"><i class="bi bi-arrow-up-short"></i><i
+                                    class="bi bi-arrow-down-short"></i>Invoice Date</th>
                             <th (click)="sort('name')"><i class="bi bi-arrow-up-short"></i><i
                                     class="bi bi-arrow-down-short"></i>Name</th>
                             <th (click)="sort('email')"><i class="bi bi-arrow-up-short"></i><i
@@ -101,21 +101,25 @@
                         <tr>
 
                             <td>{{$index+1}}</td>
-                            <td>{{ item.invoice_no}}</td>
+                            <td (click)=" edit_delete(item.id,'edit')" class="edit ">{{ item.invoice_no}}</td>
                             <td>{{ item.invoice_date }}</td>
                             <td>{{ item.name }}</td>
                             <td>{{ item.email }}</td>
                             <td>{{ item.phone }}</td>
                             <td>{{ item.address }}</td>
                             <td class="text-danger">
-                                <a href="{{base_url}}/Invoice_crudOperations/invoice_pdf?id={{item.id}}" target='_blank'>
-                                <i class='bi bi-file-earmark-pdf-fill text-danger pdf'></i></a></td>
-                            <td class="text-primary"><i class="bi bi-envelope-arrow-down-fill"></i></td>
-                            
-                            <td class=""><button class='btn px-0 pt-1 pb-1 btn-sm btn-primary  '
+                                <a href="{{base_url}}/invoice_pdf?id={{item.id}}"
+                                    target='_blank'>
+                                    <i class='bi bi-file-earmark-pdf-fill text-danger pdf'></i></a>
+                            </td>
+                            <td class="text-primary">
+                               <i class='bi bi-envelope-fill text-primary email'(click)="download_pdf(item.id)"  data-bs-toggle='modal' data-bs-target='#exampleModal' data-bs-whatever='@fat'></i>
+              </td>
+
+                            <td class=""><button class='btn px-0 pt-1 pb-1 btn-sm btn-primary'
                                     (click)=" edit_delete(item.id,'edit')"><i class='bi bi-pencil m-3'></i></button>
                             </td>
-                            <td class=""><button class='btn px-0 pt-1 pb-1 btn-sm  btn-danger '
+                            <td class=""><button class='btn px-0 pt-1 pb-1 btn-sm  btn-danger'
                                     (click)=" edit_delete(item.id,'delete')"><i class='bi bi-trash3 m-3'></i></button>
                             </td>
                         </tr>
@@ -130,6 +134,49 @@
                 </table>
             </div>
         </div>
+        <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content" >
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalLabel">Email</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" ></button>
+                    </div>
+                    <div class="modal-body">
+                        <form name="email_form" id="email-model-form" [formGroup]="email_data">
+                            <div class="mb-3 ">
+                                <label for="sender-name" class="text-start">Sender:</label>
+                                <input type="text" class="form-control" id="sender-name" formControlName="sender" value="dimpalbasnal0@gmail.com" readonly>
+                            </div>
+                            <div class="mb-3">
+                                <label for="recipient-name" class="col-form-label">Recipient:</label>
+                                <input type="text" class="form-control" id="recipient-name" formControlName="send_to" required>
+                            </div>
+                            <div class="mb-3">
+                                <label for="recipient-name" class="col-form-label">Subject:</label>
+                                <input type="text" class="form-control" id="recipient-name" formControlName="subject">
+                            </div>
+                            <div class="mb-3">
+                                <label for="message-text" class="col-form-label">Message:</label>
+                                <textarea class="form-control" id="message-text" formControlName="content"></textarea>
+                            </div>
+                            <div class="mb-3">
+                             
+                               <input type="hidden" value=''  formControlName='invoice_no'>
+                            </div>
+                            
+
+                        </form>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" id="close">Close</button>
+                        <div class="mail-btn">
+
+                            <button type="button" class="btn btn-primary" (click)='mail_send()' [disabled]="email_send">Send message</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
 
     <div class="tab-pane fade" id="result" [ngClass]="{ 'show active': activeTab === 'result' }" role="tabpanel"
@@ -140,10 +187,11 @@
                 <div class="col-12 row">
 
                     <div class="col-md-3">
+                        <input type="hidden" formControlName="id">
                         <label for="validationCustom05" class="form-label">Invoice No<span
                                 class="error">*</span></label>
-                        <input type="number" class="form-control form-control-sm  text-end" id="validationCustom05"
-                            formControlName="invoice_no">
+                        <input type="number" class="form-control form-control-sm  " id="validationCustom05"
+                            formControlName="invoice_no" (keypress)="api.only_number($event)">
                         <app-validation [formname]="invoicedata" fieldname="invoice_no"
                             label=" Invoice No"></app-validation>
                     </div>
@@ -157,10 +205,11 @@
                     </div>
                 </div>
                 <div class="col-md-3">
-                    <input type="hidden" formControlName="id">
+                   
                     <label for="validationCustom01" class="form-label">Client Name<span class="error">*</span></label>
-                    <input type="text" class="form-control form-control-sm" id="validationCustom01"
+                    <input type="text" class="form-control form-control-sm" #clientName id="validationCustom01"
                         formControlName="name" value="" maxlength="20">
+                        <app-autocomplete *ngIf="!isEditingItem[0]" [valueName]="clientName.value" [formname]="invoicedata" [fields]="['name','phone','address','email','client_id']" name="client"></app-autocomplete>
                     <app-validation [formname]="invoicedata" fieldname="name" label=" Name"></app-validation>
                     <input type="hidden" formControlName="client_id">
                 </div>
@@ -168,7 +217,7 @@
                 <div class="col-md-3">
                     <label for="validationCustom01" class="form-label">phone<span class="error">*</span></label>
                     <input type="text" class="form-control form-control-sm" id="validationCustom01"
-                        formControlName="phone" maxlength="12">
+                        formControlName="phone" maxlength="12" readonly>
                     <app-validation [formname]="invoicedata" fieldname="phone" label="Phone"
                         [minlength]=10></app-validation>
                 </div>
@@ -176,14 +225,14 @@
                 <div class="col-md-3">
                     <label for="validationCustom01" class="form-label">Email<span class="error">*</span></label>
                     <input type="text" class="form-control form-control-sm" id="validationCustom01"
-                        formControlName="email">
+                        formControlName="email" readonly>
                     <app-validation [formname]="invoicedata" fieldname="email" label="Email"></app-validation>
                 </div>
 
                 <div class="col-md-3">
                     <label for="validationCustom01" class="form-label">Address<span class="error">*</span></label>
                     <input type="text" class="form-control form-control-sm" id="validationCustom01"
-                        formControlName="address">
+                        formControlName="address" readonly>
                     <app-validation [formname]="invoicedata" fieldname="address" label="Address"
                         [minlength]=200></app-validation>
                 </div>
@@ -192,77 +241,80 @@
 
 
 
-                <div class="col-12 mt-5 row shadow p-3 mb-5 bg-body rounded" formArrayName="items" >
-                <div class="col-12 row" *ngFor="let item of items.controls; let i = index" [formGroupName]="i">
-                  
-                  
+                <div class="col-12 mt-5 row shadow p-3 mb-5 bg-body rounded" formArrayName="items">
+                    <div class="col-12 row" *ngFor="let item of items.controls; let i = index" [formGroupName]="i">
+
+                        <div class="col-md-3">
+                            <input type="hidden" formControlName="item_id">
+                            <label for="validationCustom01" class="form-label">Item Name<span
+                                    class="error">*</span></label>
+                            <input type="text" class="form-control form-control-sm" id="validationCustom01"
+                                formControlName="itemName" #itemname value="" maxlength="20"  (keyup)="enableAutocomplete(i)" >
+
+                            <app-autocomplete  *ngIf="!isEditingItem[i]" [valueName]="itemname.value" [formname]="$any(item)" [formdata]="total.bind(this)" [fields]="['itemName','itemPrice','item_id']" name="item"></app-autocomplete>
 
 
-                    <div class="col-md-3">
-                        <input type="hidden" formControlName="item_id">
-                        <label for="validationCustom01" class="form-label">Item Name<span class="error">*</span></label>
-                        <input type="text" class="form-control form-control-sm" id="validationCustom01"
-                            formControlName="itemName" #itemname value="" maxlength="20" >
+                            <app-validation [formname]="$any(item)" fieldname="itemName"
+                                label="Item Name"></app-validation>
+                           
+                        </div>
 
-                            <app-autocomplete [valueName]="itemname.value" ></app-autocomplete>
+                        <div class="col-md-2">
+                            <label for="validationCustom01" class="form-label">Item Price<span
+                                    class="error">*</span></label>
+                            <input type="text" class="form-control form-control-sm text-end" id="validationCustom01"
+                                formControlName="itemPrice" maxlength="12" readonly>
+                            <app-validation [formname]="$any(item)" fieldname="itemPrice" label="Item Price"
+                                [maxlength]=20></app-validation>
+                        </div>
 
-                     
-                        <app-validation [formname]="invoicedata" fieldname="itemName"
-                            label=" Item Name"></app-validation>
-                        <input type="hidden" formArrayName="item_id">
-                    </div>
+                        <div class="col-md-3">
+                            <label for="validationCustom01" class="form-label">Quantity<span
+                                    class="error">*</span></label>
+                            <input type="number" class="form-control form-control-sm text-end" id="validationCustom01"
+                                formControlName="quantity" min="1" (change)="get_amount(i)">
+                            <app-validation [formname]="$any(item)" fieldname="quantity"
+                                label="Quantity"></app-validation>
+                        </div>
 
-                    <div class="col-md-2">
-                        <label for="validationCustom01" class="form-label">Item Price<span
-                                class="error">*</span></label>
-                        <input type="text" class="form-control form-control-sm text-end" id="validationCustom01"
-                            formControlName="itemPrice" maxlength="12" readonly>
-                        <app-validation [formname]="invoicedata" fieldname="itemPrice" label="Item Price"
-                            [maxlength]=20 ></app-validation>
-                    </div>
-
-                    <div class="col-md-3">
-                        <label for="validationCustom01" class="form-label">Quantity<span class="error">*</span></label>
-                        <input type="number" class="form-control form-control-sm text-end" id="validationCustom01"
-                            formControlName="quantity">
-                        <app-validation [formname]="invoicedata" fieldname="quantity" label="Quantity"></app-validation>
-                    </div>
-
-                    <div class="col-md-3">
-                        <label for="validationCustom01" class="form-label">Amount<span class="error">*</span></label>
-                        <input type="text" class="form-control form-control-sm text-end" id="validationCustom01"
-                            formControlName="amount" readonly>
-                       
-                    </div>
+                        <div class="col-md-3">
+                            <label for="validationCustom01" class="form-label">Amount<span
+                                    class="error">*</span></label>
+                            <input type="text" class="form-control form-control-sm text-end" id="validationCustom01"
+                                formControlName="amount" readonly>
+                            <app-validation [formname]="$any(item)" fieldname="amount" label="Amount"></app-validation>
+                        </div>
 
 
 
 
-                    <div class="col-md-1">
+                        <div class="col-md-1">
 
-                        <button class="btn btn-danger btn-sm button" (click)="deleteItem(i)"><i class='bi bi-trash3 m-3'></i></button>
+                            <button class="btn btn-danger btn-sm button" (click)="deleteItem(i)"><i
+                            class='bi bi-trash3 m-3'></i></button>
 
 
+                        </div>
                     </div>
                 </div>
-            </div>
 
-                    <div class="col-12 row add-btn">
-                        <div class="col-md-2 mt-5">
+                <div class="col-12 row add-btn">
+                    <div class="col-md-2 mt-5">
 
-                            <button class="btn btn-sm btn-primary" (click)="addItem()">Add More</button>
-                        </div>
-                        <div class="col-md-3 ">
+                        <button class="btn btn-sm btn-primary" (click)="addItem()">Add More</button>
+                    </div>
+                    <div class="col-md-3 ">
 
-                            <label for="validationCustom01" class="form-label">Total Amount<span class="error">*</span></label>
-                            <input type="number" class="form-control text-end form-control-sm" id="validationCustom01"
-                                formControlName="total_amount" readonly>
-                        </div>
-
+                        <label for="validationCustom01" class="form-label">Total Amount<span
+                                class="error">*</span></label>
+                        <input type="text" class="form-control text-end form-control-sm" id="validationCustom01"
+                            formControlName="total_amount" readonly>
                     </div>
 
+                </div>
+
                 <div class="col-md-12">
-                    
+
                     <button class="btn table-btn btn-sm button" *ngIf="isSubmitVisible"
                         (click)="submit()">Submit</button>
 
@@ -273,3 +325,6 @@
         </div>
 
     </div>
+
+
+    

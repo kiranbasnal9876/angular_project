@@ -1,4 +1,13 @@
-
-@for(item of item_auto();track $index){
-    <option value={{item.id}}>{{item.itemName}}</option>
-}
+<div *ngIf="autoSuggestion">
+    @if(name()=='item'){
+        @for(item of item_auto();track $index){
+            <option [value]='item.id' (click)="auto_fill(item.id)">{{item.itemName}}</option>
+        }
+      }
+      @else{
+        @for(item of item_auto();track $index){
+            <option [value]='item.id' (click)="auto_fill(item.id)">{{item.name}}</option>
+        }
+      }
+  
+</div>

@@ -1,0 +1,31 @@
+
+.dashboard-container{
+    padding: 30px;
+    
+  .border{
+   
+  border-left: 5px solid #5e7b99 !important ;
+  border-radius: 5px;
+  box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
+  
+  }
+  
+  
+     text-align: center;
+      .bi{
+        font-size: 50px;
+        
+      }
+      a{
+        text-decoration: none;
+      }
+  
+      
+      .border:hover{
+       margin-top: -10px;
+     }
+     .invoice{
+      font-size: 40px;
+     }
+   }
+  

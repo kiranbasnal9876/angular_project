@@ -8,34 +8,18 @@
         <div class="" id="navbarTogglerDemo03">
      
           <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+            @for (item of total_menu; track item.id){
             <li class="nav-item">
-              <a class="nav-link active" aria-current="page" routerLink="/dashboard" ><span><i class="bi bi-grid"></i></span> Dashboard</a>
+              <a class="nav-link " aria-current="page"   routerLink="{{item.menu_path}}"  routerLinkActive="active-link"><span><i class="bi {{item.menu_icon}}"></i> {{item.menu_name}}</span></a>
             </li>
-            <li class="nav-item">
-              <a class="nav-link" routerLink="usermaster" routerLinkActive="active-link"><span><i class="bi bi-person-circle"> </i> User Master</span> </a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link" routerLink="clientmaster" routerLinkActive="active-link"><span><i class="bi bi-people-fill"></i> Client Master</span> </a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link" routerLink="itemmaster" routerLinkActive="active-link"><span><i class="bi bi-people-fill"></i> Item Master</span> </a>
-            </li>
-            
-            <li class="nav-item">
-              <a class="nav-link" routerLink="invoicemaster" routerLinkActive="active-link"><span><i class="bi bi-calendar4"></i> Invoice Master</span> </a>
-            </li>
-            
-          
-            
+          }            
             <div class="log-out">
-              <a class="nav-link" routerLink="/log-in"><span><i class="bi bi-box-arrow-in-right"></i></span> Log out</a>
+              <a class="nav-link" routerLink="/log-in" (click)="log_out()"><span><i class="bi bi-box-arrow-in-right"></i></span> Log out</a>
             </div>
           </ul>
   
       </div>
           
-   
-   
     </nav>
   </div>
   <div class="col-10 content">

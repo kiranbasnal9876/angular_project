@@ -3,6 +3,7 @@ import { HttpClient } from '@angular/common/http';
 import { Component } from '@angular/core';
 import { FormsModule, ReactiveFormsModule, FormControl, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
+import { EncrptComponent } from '../encrpt/encrpt.component';
 @Component({
   selector: 'app-log-in',
   imports: [FormsModule,ReactiveFormsModule,NgIf],
@@ -13,7 +14,7 @@ export class LogInComponent {
 
   formdata:FormGroup;
 
-  constructor(private http: HttpClient, private router: Router){
+  constructor(private http: HttpClient, private router: Router,private encrpt_data:EncrptComponent){
     this.formdata = new FormGroup({
       email : new FormControl('',[Validators.required]),
       password: new FormControl('',[Validators.required])
@@ -27,22 +28,22 @@ export class LogInComponent {
   check() {
     if (this.formdata.valid) {
       const logInData: LogIn = this.formdata.value;
-      // console.log('Form Submitted:', logInData);
-      
-
-      this.http.post("http://localhost/First_CI_Project/logInPage/log_data", logInData, {
+      this.http.post("http://localhost/angular_project/api/index.php/Log_in", logInData, {
         headers: {
           'Content-Type': 'application/json' 
         }
       }).subscribe((responce: any) => {
-        if (responce.status==200) {
-          // alert(" You are Logged In");
-          this.router.navigate(['dashboard']);
+        
+         if(responce.error){
+          alert("may your email or password is wrong");
         }
-        else
-        {
-        alert("may your email or password is wrong");
+      else{
+ 
+          localStorage.setItem('token',responce.user_data);
+          this.router.navigate(['dashboard/home']);
+         
         }
+       
       },
         (error) => {
           alert(error.message);

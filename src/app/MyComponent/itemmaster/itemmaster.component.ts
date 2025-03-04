@@ -46,10 +46,10 @@ export class ItemmasterComponent implements OnInit, dataformate {
   ngOnInit(): void {
     this.getdata();
   }
-   Upload_Folder:string ='http://localhost/Angular_Project/First_CI_Project/folder/';
+   Upload_Folder:string ='http://localhost/Angular_Project/api/Item_images/';
 
   
-  constructor(private http: HttpClient, private api: ApiService) {
+  constructor( public api: ApiService) {
 
 
     this.formdata = new FormGroup({
@@ -60,7 +60,7 @@ export class ItemmasterComponent implements OnInit, dataformate {
       order: new FormControl("DESc"),
       page_no: new FormControl(1),
       row_no: new FormControl(4),
-      table_name: new FormControl('item_master'),
+      
 
     })
   }
@@ -73,21 +73,20 @@ export class ItemmasterComponent implements OnInit, dataformate {
     id: new FormControl(),
     itemName: new FormControl('', Validators.required),
     itemD: new FormControl('', Validators.required),
-    itemPrice: new FormControl('', Validators.required),
+    itemPrice: new FormControl('', [Validators.required,Validators.maxLength(20)]),
     itemPath: new FormControl('', Validators.required),
-    table_name: new FormControl('item_master'),
-    action: new FormControl('insert'),
+   
   })
 
 
   getdata() {
 
 
-    this.api.postApicall("/paggination/test", this.formdata.value).subscribe((response: any) => {
+    this.api.postApicall("item_master/get_item_data", this.formdata.value).subscribe((response: any) => {
 
-      this.records = response.table;
-      this.page_no = response.page_no;
-      this.total_records = response.total_records;
+      this.records = response.data.table;
+      this.page_no = response.data.page_no;
+      this.total_records = response.data.total_page;
 
     }
     )
@@ -158,32 +157,27 @@ export class ItemmasterComponent implements OnInit, dataformate {
     }
   }
 
-
   clearImage() {
     this.itemdata.controls['itemPath']?.setValue('');
     this.imageUrl = '';
     this.imageDiv = true;
   }
 
+
+ 
+
   submit_Update(action: string) {
-
-    this.itemdata.patchValue({
-      "action": action,
-      "table_name": "item_master"
-    })
-
-
     let formdata = new FormData();
     Object.entries(this.itemdata.value).forEach(([key, value]) => {
-      if (key == 'itemPath' && this.file) {
-        formdata.append('itemPath', this.file);
-      }
-      formdata.append(key, value);
+       formdata.append(key, value);
     });
+    if (this.file) {
+      formdata.set('itemPath', this.file);
+  }
     if (action == 'insert') {
 
       if (this.itemdata.valid) {
-        this.api.postApicall("/crud_operations/insert", formdata).subscribe((response: any) => {
+        this.api.postApicall("item_master/insert_item_data", formdata).subscribe((response: any) => {
 
           if (response.status == 200) {
 
@@ -196,6 +190,7 @@ export class ItemmasterComponent implements OnInit, dataformate {
             this.itemdata.reset();
             this.imageDiv = true;
             this.searchtab('search');
+            this.getdata();
 
 
           }
@@ -208,9 +203,9 @@ export class ItemmasterComponent implements OnInit, dataformate {
     }
     else {
 
-      this.api.postApicall("/crud_operations/update", formdata).subscribe((response: any) => {
+      this.api.postApicall("item_master/update_item_data", formdata).subscribe((response: any) => {
 
-        if (response.status == 200) {
+        if (response==1){
           Swal.fire({
             title: "Updated successfully!",
             icon: "success",
@@ -226,20 +221,19 @@ export class ItemmasterComponent implements OnInit, dataformate {
 
   }
 
+
+
   edit_delete(id: number, action: string) {
-    let obj: any = {
-      "id": id,
-      "action": action,
-      "table_name": "item_master"
-
-    }
-    this.api.postApicall("/crud_operations/edit_delete_Fun", obj).subscribe(
-      (response: any) => {
-        this.Data = response;
-
-        if (action == "edit") {
+  
+  
+          if (action == "edit") {
+  
+            this.api.postApicall("item_master/edit_item_data", id).subscribe(
+              (response: any) => {
+               
+          
           this.imageDiv = false;
-          let editValue = this.Data.data_for_edit[0];
+          let editValue = response.data[0];
           if(editValue['itemPath']){
                
             this.imageUrl=this.Upload_Folder+editValue['itemPath'];
@@ -254,48 +248,68 @@ export class ItemmasterComponent implements OnInit, dataformate {
             }
             
           })
-          this.result('result');
-          this.isSubmitVisible = false;
-          this.isUpdateVisible = true;
+            this.result('result');
+           
+            this.isSubmitVisible = false;
+            this.isUpdateVisible = true;
+          
+        },
+        (error) => {
+          alert('not a valid call');
         }
-        else {
-          Swal.fire({
-            title: "Are you sure?",
-            text: "You won't be able to revert this!",
-            icon: "warning",
-            showCancelButton: true,
-            confirmButtonColor: "#3085d6",
-            cancelButtonColor: "#d33",
-            confirmButtonText: "Yes, delete it!"
-          }).then((result) => {
-            if (result.isConfirmed) {
-              if (this.Data.data_for_edit == "deleted") {
-                Swal.fire({
-                  title: "deleted successfully!",
-                  icon: "success",
-                  draggable: true,
-
-                });
-                this.getdata();
-
+      );
+          }
+          else {
+  
+          
+            Swal.fire({
+              title: "Are you sure?",
+              text: "You won't be able to revert this!",
+              icon: "warning",
+              showCancelButton: true,
+              confirmButtonColor: "#3085d6",
+              cancelButtonColor: "#d33",
+              confirmButtonText: "Yes, delete it!"
+            }).then((result) => {
+              if (result.isConfirmed) {
+                this.api.postApicall("item_master/delete_item_data", id).subscribe(
+                  (response: any) => {
+                   
+                    if (response.status ==200) {
+                      Swal.fire({
+                        title: "deleted successfully!",
+                        icon: "success",
+                        draggable: true,
+      
+                      });
+                      this.getdata();
+      
+                    }
+                    else{
+                      Swal.fire({
+                        title: "data not deleted!",
+                        icon: "warning",
+                        draggable: true,
+      
+                      });
+  
+                    }
+                  },
+                  (error) => {
+                    alert('not a valid call');
+                  }
+                );
+               
+  
               }
-   
-            }
-          });
-        }
-      },
-      (error) => {
-        Swal.fire({
-          icon: "error",
-          title: "Oops...",
-          text: "can't delete this item",
-         
-        });
-      }
-    );
-
-  }
-
+            });
+  
+  
+          }
+      
+  
+    }
+  
 
 
   sort(name: string) {

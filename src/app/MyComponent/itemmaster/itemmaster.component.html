@@ -3,7 +3,7 @@
 
 <ul class="nav nav-tabs" id="myTab" role="tablist">
     <li class="nav-item" role="presentation">
-      <button class="nav-link active" id="home-tab" [ngClass]="{ 'active':activeTab==='search'}" (click)="searchtab('search')" data-bs-toggle="tab" data-bs-target="#home" type="button" role="tab" aria-controls="home" aria-selected="true">Home</button>
+      <button class="nav-link active" id="home-tab" [ngClass]="{ 'active':activeTab==='search'}" (click)="searchtab('search');clearImage()" data-bs-toggle="tab" data-bs-target="#home" type="button" role="tab" aria-controls="home" aria-selected="true">Home</button>
     </li>
     <li class="nav-item" role="presentation">
       <button class="nav-link" id="profile-tab" data-bs-toggle="tab"  [ngClass]="{ 'active':activeTab==='result'}" 
@@ -12,14 +12,13 @@
   
   </ul>
   <div class="tab-content" id="myTabContent ">
-    <!-- <div class="tab-pane fade show active " id="search" [ngClass]="{ 'active':activeTab==='search'}"  role="tabpanel" aria-labelledby="home-tab"> -->
       <div class="tab-pane fade" id="search" [ngClass]="{ 'show active': activeTab === 'search' }" role="tabpanel" aria-labelledby="home-tab">
       <div class=" d-grid gap-5">
          <div class="col-12 row ">
           <form [formGroup]="formdata" class="row">
         <div class="col-md-3">
             <label for="validationCustom01" class="form-label">Name</label>
-            <input type="text" class="form-control form-control-sm" id="validationCustom01" formControlName="itemName">
+            <input type="text" class="form-control form-control-sm" id="validationCustom01" formControlName="itemName" maxlength="20">
           </div>
 
           <input type="hidden" formControlName="colname">
@@ -64,7 +63,7 @@
          
         <td>{{$index+1}}</td>
         <td>{{ item.id }}</td>
-        <td>{{ item.itemName }}</td>
+        <td class="edit" (click)="edit_delete(item.id,'edit')">{{ item.itemName }}</td>
         <td>{{ item.itemPrice }}</td>
         <td>{{ item.itemD }}</td>
         <td class="text-center"><img width="30px" src="{{Upload_Folder}}{{item.itemPath}}" alt=""></td>
@@ -96,7 +95,7 @@
         
               <div class="col-md-3">
                 <label for="validationCustom01" class="form-label">Price<span class="error">*</span></label>
-                <input type="text" class="form-control form-control-sm text-end" id="validationCustom01" formControlName="itemPrice">
+                <input type="text" class="form-control form-control-sm text-end" id="validationCustom01" formControlName="itemPrice" (keypress)="api.decimal_number($event)">
                 <app-validation [formname]="itemdata" fieldname="itemPrice" label="Price" [maxlength]=20></app-validation>
               </div>
             <div class="col-md-3">
