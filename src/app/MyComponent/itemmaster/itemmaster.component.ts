@@ -45,29 +45,27 @@ export class ItemmasterComponent implements OnInit, dataformate {
 
   ngOnInit(): void {
     this.getdata();
+    this.permission_data();
   }
    Upload_Folder:string ='http://localhost/Angular_Project/api/Item_images/';
 
   
   constructor( public api: ApiService) {
-
-
     this.formdata = new FormGroup({
       itemName: new FormControl(),
-
-
       colname: new FormControl("id"),
       order: new FormControl("DESc"),
       page_no: new FormControl(1),
       row_no: new FormControl(4),
-      
-
     })
   }
 
 
   isSubmitVisible: boolean = true;
   isUpdateVisible: boolean = false;
+  add_permission: boolean = true;
+  delete_permission:boolean=true;
+  update_permission:boolean=true;
 
   itemdata = new FormGroup({
     id: new FormControl(),
@@ -80,22 +78,34 @@ export class ItemmasterComponent implements OnInit, dataformate {
 
 
   getdata() {
-
-
     this.api.postApicall("item_master/get_item_data", this.formdata.value).subscribe((response: any) => {
-
       this.records = response.data.table;
       this.page_no = response.data.page_no;
-      this.total_records = response.data.total_page;
-
+      this.total_records = response.data.total_page;     
     }
     )
 
   }
+
+  convertTobool(val:any){
+    if(val==1){
+      return true;
+    }
+    else{
+      return false;
+    }
+    }
+
+    permission_data(){
+      this.api.postApicall("item_master/get_permission",'').subscribe((response:any)=>{
+       const permission = response.data;
+       this.add_permission =this.convertTobool(permission[0].add_records);  
+       this.delete_permission=this.convertTobool(permission[0].delete_records);
+       this.update_permission=this.convertTobool(permission[0].update_records); 
+        })
+      }
   reset() {
-
     this.formdata.controls['itemName'].reset();
-
 
     this.getdata();
 

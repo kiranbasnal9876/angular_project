@@ -5,28 +5,28 @@ import { ApiService } from '../../api.service';
 
 @Component({
   selector: 'app-sidebar',
-  imports: [RouterOutlet,RouterLink,RouterLinkActive],
+  imports: [RouterOutlet, RouterLink, RouterLinkActive],
   templateUrl: './sidebar.component.html',
   styleUrl: './sidebar.component.css'
 })
 export class SidebarComponent {
-  constructor(private router: Router ,private api:ApiService) {
+  constructor(private router: Router, private api: ApiService) {
     this.get_menu();
   }
-  log_out(){
-   
+  log_out() {
     localStorage.clear();
-    
   }
 
-  total_menu:any=[];
+  total_menu: any = [];
 
-get_menu(){
-  this.api.postApicall('Dashboard/Menu','').subscribe((responce:any)=>{
-this.total_menu=responce.data;
-  })
+  get_menu() {
+    this.api.postApicall('Dashboard/Menu', '').subscribe((responce: any) => {
+      this.total_menu = responce.data;
+      const menuPaths = this.total_menu.map((item: { menu_path: any; }) => item.menu_path);
+     localStorage.setItem('menu',JSON.stringify(menuPaths));
+    })
 
-}
+  }
 
 
 }

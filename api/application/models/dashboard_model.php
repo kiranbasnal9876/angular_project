@@ -11,10 +11,9 @@ class dashboard_model extends CI_Model
             $client_data=  $this->db->get("client_master")->result();
             $item_data=  $this->db->get("item_master")->result();
             $invoice_data=  $this->db->select("SUM(total_amount) as total")->get("invoice_master")->result();
-            return json_encode(["user_data"=>count($user_data),"client_data"=>count($client_data) ,"item_data"=>count($item_data),"invoice_data"=>$invoice_data]);
+            return ["user_data"=>count($user_data),"client_data"=>count($client_data) ,"item_data"=>count($item_data),"invoice_data"=>$invoice_data];
             
-          }
-
+        }
           function get_menu($id){
             $this->db->select('menu.menu_id,menu_path,menu_icon,menu_name');
             $this->db->from('menu');

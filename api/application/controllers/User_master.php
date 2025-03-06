@@ -2,18 +2,22 @@
 defined('BASEPATH') or exit('No direct script access allowed');
 class User_master extends CI_Controller
 {
+
+    private $check_permission;
     public function __construct()
     {
         parent::__construct();
-        $this->jwt_token->get_verified_token();
+        $this->check_permission = $this->fx->check_user_permission(2);
         $this->load->model('user_model');
     }
-    
 
-// inserting data in database........
+    // inserting data in database........
     function insert_user_data()
     {
-
+        if ($this->check_permission[0]['add_records'] == 0) {
+            echo "you have not access this page";
+            return;
+        }
         $form_data = $this->input->post();
         $validation = array(
             array(
@@ -48,46 +52,42 @@ class User_master extends CI_Controller
             echo json_encode(['errors' => $error]);
             return;
         } else {
-            $responce =  $this->user_model->insert_data($form_data);
+            $responce =  $this->user_model->insert_data($form_data, $this->log_user->id, $this->log_user->name);
             echo json_encode($responce);
             return;
         }
     }
 
-
-
-
-
     function update_user_data()
     {
+        if ($this->check_permission[0]['update_records'] == 0) {
+            echo "you have not access this page";
+            return;
+        }
         $form_data = $this->input->post();
-        $responce =  $this->user_model->update_data($form_data);
+        $responce = $this->user_model->update_data($form_data);
         echo $responce;
         return;
     }
 
-
-
-
     function delete_user_data()
     {
 
+        if ($this->check_permission[0]['delete_records'] == 0) {
+            echo "you have not access this page";
+            return;
+        }
         $id = json_decode(file_get_contents('php://input'), true);
         $responce = $this->user_model->delete_data($id);
         echo $responce;
         return;
     }
-
-
-
-
     function get_user_data()
     {
-
         $data = json_decode(file_get_contents('php://input'), true);
         $paggination_records =  $this->fx->paggination_data($data);
         $responce = $this->user_model->records($paggination_records);
-        $this->fx->Responce(200,true,$responce);
+        $this->fx->Responce(200, true, $responce);
         return;
     }
 
@@ -99,5 +99,12 @@ class User_master extends CI_Controller
         $responce = $this->user_model->edit_data($id);
         echo  $responce;
         return;
+    }
+
+
+    function get_permission()
+    {
+        $responce = $this->user_model->permission_details();
+        $this->fx->Responce(200, true, $responce);
     }
 }

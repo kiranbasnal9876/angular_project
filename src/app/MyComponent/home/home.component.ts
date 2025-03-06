@@ -24,12 +24,10 @@ export class HomeComponent implements OnInit {
 
   get_records(){
     this.api.postApicall("dashboard", '').subscribe((response: any) => {
-      this.user_data = response.user_data;
-      this.client_data = response.client_data;
-      this.item_data = response.item_data;
-      this.total_invoice=response.invoice_data[0].total
-
-      
+      this.user_data = response.data.user_data;
+      this.client_data = response.data.client_data;
+      this.item_data = response.data.item_data;
+      this.total_invoice=response.data.invoice_data[0].total;
     }
     )
   }

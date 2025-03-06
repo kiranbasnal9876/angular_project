@@ -3,19 +3,13 @@ defined('BASEPATH') or exit('No direct script access allowed');
 class User_permission extends CI_Controller
 {
     
-    
-   
-
-        private $log_userId;
-    
         public function __construct() {
             parent::__construct();
-            $this->log_userId = $this->jwt_token->get_verified_token(); 
             $this->load->model('permission_model');
         }
     
-        function get_users() {
-            $data = $this->permission_model->all_users($this->log_userId); 
+        function get_users(){
+            $data = $this->permission_model->all_users($this->fx->login_user_id()); 
             $this->fx->Responce('200', 'true', $data);
             return;
         }

@@ -44,7 +44,7 @@ export class UsermasterComponent implements OnInit, dataformate {
 
   ngOnInit(): void {
     this.getdata();
-
+    this.permission_data();
     this.theCallback = this.getdata;
   }
 
@@ -82,12 +82,12 @@ export class UsermasterComponent implements OnInit, dataformate {
 
   })
 
+  add_permission: boolean = true;
+  delete_permission: boolean = true;
+  update_permission: boolean = true;
 
   getdata() {
-
-
     this.user.postApicall("user_master/get_user_data", this.formdata.value).subscribe((response: any) => {
-
       this.records = response.data.table;
       this.page_no = response.data.page_no;
       this.total_records = response.data.total_page;
@@ -96,14 +96,28 @@ export class UsermasterComponent implements OnInit, dataformate {
 
   }
 
-  reset() {
+  convertTobool(val: any) {
+    if (val == 1) {
+      return true;
+    }
+    else {
+      return false;
+    }
+  }
+  permission_data() {
+    this.user.postApicall("item_master/get_permission", '').subscribe((response: any) => {
+      const permission = response.data;
+      this.add_permission = this.convertTobool(permission[0].add_records);
+      this.delete_permission = this.convertTobool(permission[0].delete_records);
+      this.update_permission = this.convertTobool(permission[0].update_records);
+    })
+  }
 
+  reset() {
     this.formdata.controls['name'].reset();
     this.formdata.controls['phone'].reset();
     this.formdata.controls['email'].reset();
-
     this.getdata();
-
   }
 
   search() {
@@ -160,7 +174,7 @@ export class UsermasterComponent implements OnInit, dataformate {
           Swal.fire({
             icon: "error",
             title: "Oops...",
-            text: response.errors.email|| response.errors.phone,
+            text: response.errors.email || response.errors.phone,
           });
         }
 
@@ -178,13 +192,13 @@ export class UsermasterComponent implements OnInit, dataformate {
   edit_delete(id: number, action: string) {
 
 
-        if (action == "edit") {
+    if (action == "edit") {
 
-          this.user.postApicall("user_master/edit_user_data", id).subscribe(
-            (response: any) => {
-             
+      this.user.postApicall("user_master/edit_user_data", id).subscribe(
+        (response: any) => {
+
           let editValue = response.data[0];
-          
+
 
 
           delete editValue.PASSWORD;
@@ -198,61 +212,59 @@ export class UsermasterComponent implements OnInit, dataformate {
           this.result('result');
           this.isSubmitVisible = false;
           this.isUpdateVisible = true;
-        
-      },
-      (error) => {
-        alert('not a valid call');
-      }
-    );
+
+        },
+        (error) => {
+          alert('not a valid call');
         }
-        else {
+      );
+    }
+    else {
+      Swal.fire({
+        title: "Are you sure?",
+        text: "You won't be able to revert this!",
+        icon: "warning",
+        showCancelButton: true,
+        confirmButtonColor: "#3085d6",
+        cancelButtonColor: "#d33",
+        confirmButtonText: "Yes, delete it!"
+      }).then((result) => {
+        if (result.isConfirmed) {
+          this.user.postApicall("user_master/delete_user_data", id).subscribe(
+            (response: any) => {
 
-        
-          Swal.fire({
-            title: "Are you sure?",
-            text: "You won't be able to revert this!",
-            icon: "warning",
-            showCancelButton: true,
-            confirmButtonColor: "#3085d6",
-            cancelButtonColor: "#d33",
-            confirmButtonText: "Yes, delete it!"
-          }).then((result) => {
-            if (result.isConfirmed) {
-              this.user.postApicall("user_master/delete_user_data", id).subscribe(
-                (response: any) => {
-                 
-                  if (response.status ==200) {
-                    Swal.fire({
-                      title: "deleted successfully!",
-                      icon: "success",
-                      draggable: true,
-    
-                    });
-                    this.getdata();
-    
-                  }
-                  else{
-                    Swal.fire({
-                      title: "data not deleted!",
-                      icon: "warning",
-                      draggable: true,
-    
-                    });
+              if (response.status == 200) {
+                Swal.fire({
+                  title: "deleted successfully!",
+                  icon: "success",
+                  draggable: true,
 
-                  }
-                },
-                (error) => {
-                  alert('not a valid call');
-                }
-              );
-             
+                });
+                this.getdata();
 
+              }
+              else {
+                Swal.fire({
+                  title: "data not deleted!",
+                  icon: "warning",
+                  draggable: true,
+
+                });
+
+              }
+            },
+            (error) => {
+              alert('not a valid call');
             }
-          });
+          );
 
 
         }
-    
+      });
+
+
+    }
+
 
   }
 
@@ -265,7 +277,7 @@ export class UsermasterComponent implements OnInit, dataformate {
 
     this.user.postApicall("user_master/update_user_data", formData).subscribe((response: any) => {
 
-      if (response==1) {
+      if (response == 1) {
         Swal.fire({
           title: "Updated successfully!",
           icon: "success",
@@ -275,11 +287,11 @@ export class UsermasterComponent implements OnInit, dataformate {
         this.userdata.reset();
         this.getdata();
       }
-      else{
+      else {
         Swal.fire({
           icon: "error",
-            title: "Oops...",
-            text: response.error,
+          title: "Oops...",
+          text: response.error,
         });
 
       }

@@ -9,6 +9,9 @@ import { HomeComponent } from './MyComponent/home/home.component';
 import { checkLogUserGuard } from './check-log-user.guard';
 import { AuthGuard } from './auth-guard.guard';
 import { UserpermissionComponent } from './MyComponent/userpermission/userpermission.component';
+import { RestrictedComponent } from './MyComponent/restricted/restricted.component';
+import { checkViewgaurd } from './check-view.guard';
+// import { checkViewgaurd } from './check-view.guard';
 export const routes: Routes = [
     {
         path: '',
@@ -27,38 +30,53 @@ export const routes: Routes = [
         component:DashboardComponent,
          canActivate: [checkLogUserGuard],
         
-        children:[{
+        children:[
+         {
             path:'usermaster',
             title:'User Master',
             component:UsermasterComponent,
+            canActivate:[checkViewgaurd]
            
          },
          {
             path:'home',
             title:'',
-            component:HomeComponent
+            component:HomeComponent,
+            canActivate:[checkViewgaurd]
          },
          {
             path:'clientmaster', 
             title:'Client Master',
-            component:ClientmasterComponent
+            component:ClientmasterComponent,
+            canActivate:[checkViewgaurd]
          },
          {
             path:'itemmaster',
             title:'Item Master',
-            component:ItemmasterComponent
+            component:ItemmasterComponent,
+            canActivate:[checkViewgaurd]
          },
          {
             path:'invoicemaster',
             title:'Invoice Master',
-            component:InvoicemasterComponent
+            component:InvoicemasterComponent,
+            canActivate:[checkViewgaurd]
          },
          {
             path:'userpermission',
             title:'User Permission',
-            component:UserpermissionComponent
-         }
+            component:UserpermissionComponent,
+            canActivate:[checkViewgaurd]
+         },
+       
       ]
     },
+    {
+
+      path:'restricted',
+      title:'Not Allowed',
+      component:RestrictedComponent
+    }
+   
      
 ];

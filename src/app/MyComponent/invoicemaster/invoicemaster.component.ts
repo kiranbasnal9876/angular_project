@@ -22,54 +22,41 @@ export interface dataformate {
   styleUrl: './invoicemaster.component.css'
 })
 export class InvoicemasterComponent implements dataformate, OnInit {
-
-
   table: [] = [];
   total_records: number = 0;
   page_no: number = 1;
-
   records: any[] = [];
   formdata: FormGroup;
   Data: any;
-
   item_auto: any[] = [];
-
   isEditingItem: boolean[] = [];
-
-
   base_url = "http://localhost/Angular_Project/api/invoice_master";
-
+  authorization = localStorage.getItem('token') || '';
   ngOnInit(): void {
     this.getdata();
     this.total();
     this.getInvoice_number_date();
-
+    this.permission_data();
   }
   constructor(public api: ApiService) {
-
-
     this.formdata = new FormGroup({
       name: new FormControl(),
       phone: new FormControl(),
       email: new FormControl(),
       invoice_no: new FormControl(),
       invoice_date: new FormControl(),
-
       colname: new FormControl("id"),
       order: new FormControl("DESc"),
       page_no: new FormControl(1),
       row_no: new FormControl(4),
-
-
     })
   }
 
-
-
-
   isSubmitVisible: boolean = true;
   isUpdateVisible: boolean = false;
-
+  add_permission: boolean = true;
+  delete_permission: boolean = true;
+  update_permission: boolean = true;
   invoicedata = new FormGroup({
     id: new FormControl(),
     name: new FormControl('', [Validators.required]),
@@ -80,36 +67,36 @@ export class InvoicemasterComponent implements dataformate, OnInit {
     client_id: new FormControl(),
     invoice_date: new FormControl('', [Validators.required]),
     total_amount: new FormControl(0, [Validators.required]),
-
-
     items: new FormArray([
       this.createItemFormGroup()
     ])
   })
 
 
-  getdata() {
+  getdata(){
     this.api.postApicall("invoice_master/get_invoice_data", this.formdata.value).subscribe((response: any) => {
       this.records = response.data.table;
       this.page_no = response.data.page_no;
       this.total_records = response.data.total_page;
     }
-    )
-
+  )
   }
 
+  convertTobool(val: any) {
+    if (val == 1) {
+      return true;
+    }
+    else {
+      return false;
+    }
+  }
 
-  getInvoice_number_date() {
+  getInvoice_number_date(){
     this.api.postApicall("invoice_master/last_invoice_number", '').subscribe((response: any) => {
-
       this.invoicedata.get('invoice_no')?.setValue("100" + (Number(response.id) + 2));
-
     })
-
     this.invoicedata.get('invoice_date')?.setValue(new Date().toISOString().split('T')[0]);
-
   }
-
 
   get items(): FormArray {
     return this.invoicedata.get('items') as FormArray;
@@ -125,9 +112,6 @@ export class InvoicemasterComponent implements dataformate, OnInit {
     });
   }
 
-
-
-
   addItem() {
     this.items.push(this.createItemFormGroup());
   }
@@ -139,9 +123,6 @@ export class InvoicemasterComponent implements dataformate, OnInit {
     this.total();
   }
 
- 
-  
-
   get_amount(i: number) {
 
     let price = this.items.at(i).get('itemPrice')?.getRawValue();
@@ -150,27 +131,30 @@ export class InvoicemasterComponent implements dataformate, OnInit {
     this.items.at(i).get('amount')?.setValue(total_amount);
     this.total();
 
-
   }
-
 
   total() {
     let total = 0;
-
     for (let j = 0; j < this.items.length; j++) {
       let total_price = this.items.at(j).get('itemPrice')?.getRawValue();
       let total_quantity = this.items.at(j).get('quantity')?.getRawValue();
-
       let total_value = total_price * total_quantity;
-
       total += total_value;
     }
     total = parseFloat(total.toFixed(2));
-
     this.invoicedata.get('total_amount')?.setValue(total);
   }
 
 
+
+  permission_data(){
+    this.api.postApicall("invoice_master/get_permission",'').subscribe((response:any)=>{
+     const permission = response.data;
+     this.add_permission =this.convertTobool(permission[0].add_records);  
+     this.delete_permission=this.convertTobool(permission[0].delete_records);
+     this.update_permission=this.convertTobool(permission[0].update_records); 
+      })
+    }
 
   reset() {
 
@@ -422,10 +406,10 @@ export class InvoicemasterComponent implements dataformate, OnInit {
     })
   }
 
-email_send:boolean=false;
+  email_send: boolean = false;
 
   mail_send() {
-this.email_send=true;
+    this.email_send = true;
     this.email_data.get('invoice_no')?.setValue(this.invoiceNo);
     console.log(this.email_data.value);
     let formData = new FormData();
@@ -438,7 +422,7 @@ this.email_send=true;
     if (this.email_data.valid)
       this.api.postApicall("EmailController/send_mail", formData).subscribe((response: any) => {
         if (response.status == 200) {
-          this.email_send=false;
+          this.email_send = false;
           this.email_data.reset();
         }
       })
@@ -458,7 +442,7 @@ this.email_send=true;
 
 
   all_itemsDelete() {
-    
+
     while (this.items.length > 1) {
       this.items.removeAt(1);
     }

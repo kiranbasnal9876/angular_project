@@ -33,15 +33,13 @@ export class LogInComponent {
           'Content-Type': 'application/json' 
         }
       }).subscribe((responce: any) => {
-        
-         if(responce.error){
+         if(responce.code==400){
           alert("may your email or password is wrong");
         }
       else{
- 
-          localStorage.setItem('token',responce.user_data);
-          this.router.navigate(['dashboard/home']);
-         
+        
+          localStorage.setItem('token',responce.data);
+          this.router.navigate(['dashboard']);
         }
        
       },

@@ -7,6 +7,7 @@ import { PagginationComponent } from '../paggination/paggination.component';
 
 import { NgClass, NgIf } from '@angular/common';
 import Swal from 'sweetalert2';
+import { response } from 'express';
 
 
 export interface dataformate {
@@ -42,6 +43,7 @@ export class ClientmasterComponent implements OnInit, dataformate {
   ngOnInit(): void {
     this.getdata();
     this.getstates();
+    this.permission_data();
   }
   constructor(public api: ApiService) {
 
@@ -60,7 +62,9 @@ export class ClientmasterComponent implements OnInit, dataformate {
     })
   }
 
-
+  add_permission: boolean = true;
+  delete_permission:boolean=true;
+  update_permission:boolean=true;
 
 
   isSubmitVisible: boolean = true;
@@ -85,18 +89,23 @@ export class ClientmasterComponent implements OnInit, dataformate {
       this.records = response.data.table;
       this.page_no = response.data.page_no;
       this.total_records = response.data.total_page;
+     
     }
     )
   }
 
+
+  convertTobool(val:any)
+  {
+    if(val==1){return true; }
+    else{  return false; }
+    }
 
   getstates() {
     this.api.postApicall("Client_master/get_states", '').subscribe((response: any) => {
       this.states = response.states;
 
     })
-
-
   }
 
   getdistrict(id: string) {
@@ -106,6 +115,16 @@ export class ClientmasterComponent implements OnInit, dataformate {
 
     })
 
+  }
+
+
+  permission_data(){
+  this.api.postApicall("client_master/get_permission",'').subscribe((response:any)=>{
+   const permission = response.data;
+   this.add_permission =this.convertTobool(permission[0].add_records);  
+   this.delete_permission=this.convertTobool(permission[0].delete_records);
+   this.update_permission=this.convertTobool(permission[0].update_records); 
+    })
   }
 
   reset() {
@@ -146,9 +165,6 @@ export class ClientmasterComponent implements OnInit, dataformate {
   }
 
   submit() {
-
-
-
     let formData = new FormData();
     Object.entries(this.clientdata.value).forEach(([key, value]) => {
       formData.append(key, value);
@@ -268,7 +284,12 @@ export class ClientmasterComponent implements OnInit, dataformate {
               }
             },
             (error) => {
-              alert('not a valid call');
+              Swal.fire({
+                title: "you can't  delet this client!",
+                icon: "warning",
+                draggable: true,
+
+              });
             }
           );
 
@@ -292,7 +313,7 @@ export class ClientmasterComponent implements OnInit, dataformate {
 
     this.api.postApicall("client_master/update_client_data", formData).subscribe((response: any) => {
 
-      if (response == 1) {
+      if (response.code == 200) {
         Swal.fire({
           title: "Updated successfully!",
           icon: "success",
